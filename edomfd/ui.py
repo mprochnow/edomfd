@@ -49,6 +49,9 @@ class AppWindow:
     def show(self):
         self._tk.mainloop()
 
+    def destroy(self):
+        self._tk.destroy()
+
     def _arrange_labels(self):
         labels = [
             [self._label_docked, self._label_landed, self._label_supercruise,],

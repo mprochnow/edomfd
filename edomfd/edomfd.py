@@ -35,6 +35,8 @@ if __name__ == '__main__':
     try:
         window.show()
     except KeyboardInterrupt:
-        pass
+        window.destroy()
+
+    journal.stop()
 
     print("Bye!")
