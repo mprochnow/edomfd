@@ -6,7 +6,7 @@ import screeninfo
 
 from edojournal import EDOStatus
 
-QUEUE_CHECK_TIME = 250  # ms
+QUEUE_CHECK_TIME = 100  # ms
 
 
 class AppWindow:
