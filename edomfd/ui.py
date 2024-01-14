@@ -21,30 +21,37 @@ class AppWindow:
         self._tk.columnconfigure(0, weight=3)
         self._tk.rowconfigure(0, weight=1)
 
+        self._style = ttk.Style(self._tk)
+        self._style.configure('TFrame', background='#000000')
+        self._style.configure('Status.TLabel', background='#DE9A01')
+        self._style.map('Status.TLabel',
+                        background=[('disabled', '#000000')],
+                        foreground=[('disabled', '#DE9A01')])
+
         self._frame = ttk.Frame(self._tk, relief='ridge')
         self._frame.grid(column=0, row=0, sticky="news")
         self._frame.columnconfigure(0, weight=1)
         self._frame.columnconfigure(1, weight=1)
         self._frame.columnconfigure(2, weight=1)
 
-        self._label_docked = ttk.Label(self._frame, text="Docked")
-        self._label_landed = ttk.Label(self._frame, text="Landed")
-        self._label_landing_gear = ttk.Label(self._frame, text="Landing Gear")
-        self._label_shields = ttk.Label(self._frame, text="Shields")
-        self._label_supercruise = ttk.Label(self._frame, text="Supercruise")
-        self._label_flight_assist_off = ttk.Label(self._frame, text="Flight Assist Off")
-        self._label_hardpoints = ttk.Label(self._frame, text="Hardpoints")
-        self._label_lights = ttk.Label(self._frame, text="Lights")
-        self._label_night_vision = ttk.Label(self._frame, text="Night Vision")
-        self._label_cargo_scoop = ttk.Label(self._frame, text="Cargo Scoop")
-        self._label_silent_running = ttk.Label(self._frame, text="Silent Running")
-        self._label_scooping_fuel = ttk.Label(self._frame, text="Scooping Fuel")
-        self._label_fsd_mass_locked = ttk.Label(self._frame, text="FSD Mass-locked")
-        self._label_fsd_charging = ttk.Label(self._frame, text="FSD Charging")
-        self._label_fsd_hyper_charging = ttk.Label(self._frame, text="FSD Hyper-Drive Charging")
-        self._label_fsd_jump = ttk.Label(self._frame, text="FSD Jump")
-        self._label_fsd_cooldown = ttk.Label(self._frame, text="FSD Cooldown")
-        self._label_hud_analysis_mode = ttk.Label(self._frame, text="Analysis Mode")
+        self._label_docked = ttk.Label(self._frame, text="Docked", style='Status.TLabel')
+        self._label_landed = ttk.Label(self._frame, text="Landed", style='Status.TLabel')
+        self._label_landing_gear = ttk.Label(self._frame, text="Landing Gear", style='Status.TLabel')
+        self._label_shields = ttk.Label(self._frame, text="Shields", style='Status.TLabel')
+        self._label_supercruise = ttk.Label(self._frame, text="Supercruise", style='Status.TLabel')
+        self._label_flight_assist_off = ttk.Label(self._frame, text="Flight Assist Off", style='Status.TLabel')
+        self._label_hardpoints = ttk.Label(self._frame, text="Hardpoints", style='Status.TLabel')
+        self._label_lights = ttk.Label(self._frame, text="Lights", style='Status.TLabel')
+        self._label_night_vision = ttk.Label(self._frame, text="Night Vision", style='Status.TLabel')
+        self._label_cargo_scoop = ttk.Label(self._frame, text="Cargo Scoop", style='Status.TLabel')
+        self._label_silent_running = ttk.Label(self._frame, text="Silent Running", style='Status.TLabel')
+        self._label_scooping_fuel = ttk.Label(self._frame, text="Scooping Fuel", style='Status.TLabel')
+        self._label_fsd_mass_locked = ttk.Label(self._frame, text="FSD Mass-locked", style='Status.TLabel')
+        self._label_fsd_charging = ttk.Label(self._frame, text="FSD Charging", style='Status.TLabel')
+        self._label_fsd_hyper_charging = ttk.Label(self._frame, text="FSD Hyper-Drive Charging", style='Status.TLabel')
+        self._label_fsd_jump = ttk.Label(self._frame, text="FSD Jump", style='Status.TLabel')
+        self._label_fsd_cooldown = ttk.Label(self._frame, text="FSD Cooldown", style='Status.TLabel')
+        self._label_hud_analysis_mode = ttk.Label(self._frame, text="Analysis Mode", style='Status.TLabel')
 
         self._tk.bind('<Escape>', self._close)
         self._tk.bind('<F11>', self._toggle_fullscreen)
@@ -97,7 +104,7 @@ class AppWindow:
         for i_row, row in enumerate(labels):
             for i_col, label in enumerate(row):
                 label.configure(state='disabled')
-                label.grid(column=i_col, row=i_row, padx=5, pady=5)
+                label.grid(column=i_col, row=i_row, padx=0, pady=0, sticky=N+E+S+W)
 
     def _maybe_move_to_secondary_monitor(self):
         for monitor in self._monitors:
