@@ -93,12 +93,12 @@ class AppWindow:
 
     def _arrange_labels(self):
         labels = [
-            [self._label_docked, self._label_landed, self._label_supercruise,],
+            [self._label_docked, self._label_landed, self._label_hud_analysis_mode],
             [self._label_shields, self._label_silent_running, self._label_flight_assist_off],
             [self._label_hardpoints, self._label_cargo_scoop, self._label_landing_gear],
             [self._label_lights, self._label_night_vision, self._label_scooping_fuel],
-            [self._label_fsd_mass_locked, self._label_fsd_charging, self._label_fsd_hyper_charging],
-            [self._label_fsd_jump, self._label_fsd_cooldown, self._label_hud_analysis_mode]
+            [self._label_fsd_charging, self._label_fsd_hyper_charging, self._label_fsd_cooldown],
+            [self._label_fsd_mass_locked, self._label_fsd_jump, self._label_supercruise]
         ]
 
         for i_row, row in enumerate(labels):
