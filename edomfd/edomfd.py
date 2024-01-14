@@ -1,7 +1,10 @@
+import functools
 import logging.config
+import queue
 
 import screeninfo
 
+from edojournal import EDOJournal, EDOStatus
 from ui import AppWindow
 
 logging.config.dictConfig({
@@ -28,10 +31,19 @@ logging.config.dictConfig({
 
 
 if __name__ == '__main__':
+    def status_cb(q: queue.Queue, status: EDOStatus):
+        q.put(status)
+
+    status_queue = queue.Queue()
+
     # Needs to be called before Tk is initialized because it might mess with DPI awareness
     monitors = list(screeninfo.get_monitors())
 
-    window = AppWindow(monitors)
+    window = AppWindow(monitors, status_queue)
+
+    journal = EDOJournal(functools.partial(status_cb, status_queue))
+    journal.start()
+
     try:
         window.show()
     except KeyboardInterrupt:

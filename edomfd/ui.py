@@ -1,19 +1,25 @@
+import queue
 from tkinter import *
 from tkinter import ttk
 
 import screeninfo
 
+from edojournal import EDOStatus
+
+QUEUE_CHECK_TIME = 250  # ms
+
 
 class AppWindow:
-    def __init__(self, monitors: list[screeninfo.Monitor]):
+    def __init__(self, monitors: list[screeninfo.Monitor], status_queue: queue.Queue):
+        self._monitors: list[screeninfo.Monitor] = monitors
+        self._status_queue: queue.Queue = status_queue
+
         self._fullscreen: bool = False
 
         self._tk = Tk()
         self._tk.title("EDO MFD")
         self._tk.columnconfigure(0, weight=3)
         self._tk.rowconfigure(0, weight=1)
-
-        self._monitors = monitors
 
         self._frame = ttk.Frame(self._tk, relief='ridge')
         self._frame.grid(column=0, row=0, sticky="news")
@@ -45,12 +51,38 @@ class AppWindow:
 
         self._arrange_labels()
         self._maybe_move_to_secondary_monitor()
+        self._tk.after(QUEUE_CHECK_TIME, self._update)
 
     def show(self):
         self._tk.mainloop()
 
     def destroy(self):
         self._tk.destroy()
+
+    def _update(self):
+        self._tk.after(QUEUE_CHECK_TIME, self._update)
+
+        while not self._status_queue.empty():
+            status: EDOStatus = self._status_queue.get_nowait()
+
+            self._label_docked.configure(state='enabled' if status.docked else 'disabled')
+            self._label_landed.configure(state='enabled' if status.landed else 'disabled')
+            self._label_landing_gear.configure(state='enabled' if status.landing_gear else 'disabled')
+            self._label_shields.configure(state='enabled' if status.shields_up else 'disabled')
+            self._label_supercruise.configure(state='enabled' if status.supercruise else 'disabled')
+            self._label_flight_assist_off.configure(state='enabled' if status.flight_assist_off else 'disabled')
+            self._label_hardpoints.configure(state='enabled' if status.hardpoints_deployed else 'disabled')
+            self._label_lights.configure(state='enabled' if status.lights_on else 'disabled')
+            self._label_night_vision.configure(state='enabled' if status.night_vision else 'disabled')
+            self._label_cargo_scoop.configure(state='enabled' if status.cargo_scoop_deployed else 'disabled')
+            self._label_silent_running.configure(state='enabled' if status.silent_running else 'disabled')
+            self._label_scooping_fuel.configure(state='enabled' if status.scooping_fuel else 'disabled')
+            self._label_fsd_mass_locked.configure(state='enabled' if status.fsd_mass_locked else 'disabled')
+            self._label_fsd_charging.configure(state='enabled' if status.fsd_charging else 'disabled')
+            self._label_fsd_hyper_charging.configure(state='enabled' if status.fsd_hyper_charging else 'disabled')
+            self._label_fsd_jump.configure(state='enabled' if status.fsd_jump else 'disabled')
+            self._label_fsd_cooldown.configure(state='enabled' if status.fsd_cooldown else 'disabled')
+            self._label_hud_analysis_mode.configure(state='enabled' if status.analysis_mode else 'disabled')
 
     def _arrange_labels(self):
         labels = [
