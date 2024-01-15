@@ -33,6 +33,9 @@ class AppWindow:
         self._frame.columnconfigure(0, weight=1)
         self._frame.columnconfigure(1, weight=1)
         self._frame.columnconfigure(2, weight=1)
+        self._frame.columnconfigure(3, weight=1)
+        self._frame.columnconfigure(4, weight=1)
+        self._frame.columnconfigure(5, weight=1)
 
         self._label_docked = ttk.Label(self._frame, text="Docked", style='Status.TLabel')
         self._label_landed = ttk.Label(self._frame, text="Landed", style='Status.TLabel')
@@ -52,6 +55,22 @@ class AppWindow:
         self._label_fsd_jump = ttk.Label(self._frame, text="FSD Jump", style='Status.TLabel')
         self._label_fsd_cooldown = ttk.Label(self._frame, text="FSD Cooldown", style='Status.TLabel')
         self._label_hud_analysis_mode = ttk.Label(self._frame, text="Analysis Mode", style='Status.TLabel')
+
+        self._label_latitude = ttk.Label(self._frame, text="Latitude: -", style='Status.TLabel')
+        self._label_latitude.configure(state='disabled')
+        self._label_latitude.grid(column=0, row=6, columnspan=3, padx=0, pady=0, sticky=N + E + S + W)
+
+        self._label_heading = ttk.Label(self._frame, text="Heading: -", style='Status.TLabel')
+        self._label_heading.configure(state='disabled')
+        self._label_heading.grid(column=3, row=6, columnspan=3, padx=0, pady=0, sticky=N + E + S + W)
+
+        self._label_longitude = ttk.Label(self._frame, text="Longitude: -", style='Status.TLabel')
+        self._label_longitude.configure(state='disabled')
+        self._label_longitude.grid(column=0, row=7, columnspan=3, padx=0, pady=0, sticky=N + E + S + W)
+
+        self._label_altitude = ttk.Label(self._frame, text="Altitude: -", style='Status.TLabel')
+        self._label_altitude.configure(state='disabled')
+        self._label_altitude.grid(column=3, row=7, columnspan=3, padx=0, pady=0, sticky=N + E + S + W)
 
         self._tk.bind('<Escape>', self._close)
         self._tk.bind('<F11>', self._toggle_fullscreen)
@@ -90,6 +109,23 @@ class AppWindow:
             self._label_fsd_jump.configure(state='enabled' if status.fsd_jump else 'disabled')
             self._label_fsd_cooldown.configure(state='enabled' if status.fsd_cooldown else 'disabled')
             self._label_hud_analysis_mode.configure(state='enabled' if status.analysis_mode else 'disabled')
+            self._label_latitude.configure(text="Latitude: " + f"{status.latitude if status.latitude else '-'}")
+            self._label_longitude.configure(text="Longitude: " + f"{status.longitude if status.longitude else '-'}")
+
+            if status.heading:
+                heading = f"Heading: {status.heading}°"
+            else:
+                heading = "Heading: -"
+            self._label_heading = heading
+
+            if status.altitude:
+                if status.altitude > 1000:
+                    altitude = f"Altitude: {status.altitude//1000}km"
+                else:
+                    altitude = f"Altitude: {status.altitude}m"
+            else:
+                altitude = "Altitude: -"
+            self._label_altitude.configure(text=altitude)
 
     def _arrange_labels(self):
         labels = [
@@ -104,7 +140,7 @@ class AppWindow:
         for i_row, row in enumerate(labels):
             for i_col, label in enumerate(row):
                 label.configure(state='disabled')
-                label.grid(column=i_col, row=i_row, padx=0, pady=0, sticky=N+E+S+W)
+                label.grid(column=i_col*2, row=i_row, columnspan=2, padx=0, pady=0, sticky=N+E+S+W)
 
     def _maybe_move_to_secondary_monitor(self):
         for monitor in self._monitors:

@@ -19,8 +19,12 @@ FILENAME_STATUS = 'Status.json'
 
 class EDOStatus:
     def __init__(self, j):
-        flags = j['Flags']
-        flags2 = j['Flags2']
+        self.latitude = j.get('Latitude')
+        self.longitude = j.get('Longitude')
+        self.heading = j.get('Heading')
+        self.altitude = j.get('Altitude')
+        flags = j.get('Flags', 0)
+        flags2 = j.get('Flags2', 0)
 
         self.docked = flags & 0x01
         self.landed = flags & 0x02
@@ -95,9 +99,4 @@ class EDOJournal(FileSystemEventHandler):
         with open(filename, 'rb', 0) as f:
             c = f.read().strip()
             if c:
-                try:
-                    self._status_cb(EDOStatus(json.loads(c)))
-                except KeyError:
-                    pass
-
-
+                self._status_cb(EDOStatus(json.loads(c)))
