@@ -1,10 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
-from edoevent import EDOStatus
 
-
-class StatusFrame(ttk.Frame):
+class StatusPanel(ttk.Frame):
     def __init__(self, parent, **kwargs):
         self._set_styles()
 
@@ -36,25 +34,29 @@ class StatusFrame(ttk.Frame):
 
         self._arrange_labels()
 
-    def update_status(self, status: EDOStatus):
-        self._label_docked.configure(state='enabled' if status.docked else 'disabled')
-        self._label_landed.configure(state='enabled' if status.landed else 'disabled')
-        self._label_landing_gear.configure(state='enabled' if status.landing_gear else 'disabled')
-        self._label_shields.configure(state='enabled' if status.shields_up else 'disabled')
-        self._label_supercruise.configure(state='enabled' if status.supercruise else 'disabled')
-        self._label_flight_assist_off.configure(state='enabled' if status.flight_assist_off else 'disabled')
-        self._label_hardpoints.configure(state='enabled' if status.hardpoints_deployed else 'disabled')
-        self._label_lights.configure(state='enabled' if status.lights_on else 'disabled')
-        self._label_night_vision.configure(state='enabled' if status.night_vision else 'disabled')
-        self._label_cargo_scoop.configure(state='enabled' if status.cargo_scoop_deployed else 'disabled')
-        self._label_silent_running.configure(state='enabled' if status.silent_running else 'disabled')
-        self._label_scooping_fuel.configure(state='enabled' if status.scooping_fuel else 'disabled')
-        self._label_fsd_mass_locked.configure(state='enabled' if status.fsd_mass_locked else 'disabled')
-        self._label_fsd_charging.configure(state='enabled' if status.fsd_charging else 'disabled')
-        self._label_fsd_hyper_charging.configure(state='enabled' if status.fsd_hyper_charging else 'disabled')
-        self._label_fsd_jump.configure(state='enabled' if status.fsd_jump else 'disabled')
-        self._label_fsd_cooldown.configure(state='enabled' if status.fsd_cooldown else 'disabled')
-        self._label_hud_analysis_mode.configure(state='enabled' if status.analysis_mode else 'disabled')
+    def set(self, docked: bool, landed: bool, landing_gear: bool, shields: bool, supercruise: bool,
+            flight_assist_off: bool, hardpoints_deployed: bool, lights: bool, night_vision: bool,
+            cargo_scoop_deployed: bool, silent_running: bool, fuel_scooping: bool, fsd_mass_locked: bool,
+            fsd_charging: bool, fsd_hyper_drive_charging: bool, fsd_jump: bool, fsd_cooldown: bool,
+            analysis_mode: bool) -> None:
+        self._label_docked.configure(state='enabled' if docked else 'disabled')
+        self._label_landed.configure(state='enabled' if landed else 'disabled')
+        self._label_landing_gear.configure(state='enabled' if landing_gear else 'disabled')
+        self._label_shields.configure(state='enabled' if shields else 'disabled')
+        self._label_supercruise.configure(state='enabled' if supercruise else 'disabled')
+        self._label_flight_assist_off.configure(state='enabled' if flight_assist_off else 'disabled')
+        self._label_hardpoints.configure(state='enabled' if hardpoints_deployed else 'disabled')
+        self._label_lights.configure(state='enabled' if lights else 'disabled')
+        self._label_night_vision.configure(state='enabled' if night_vision else 'disabled')
+        self._label_cargo_scoop.configure(state='enabled' if cargo_scoop_deployed else 'disabled')
+        self._label_silent_running.configure(state='enabled' if silent_running else 'disabled')
+        self._label_scooping_fuel.configure(state='enabled' if fuel_scooping else 'disabled')
+        self._label_fsd_mass_locked.configure(state='enabled' if fsd_mass_locked else 'disabled')
+        self._label_fsd_charging.configure(state='enabled' if fsd_charging else 'disabled')
+        self._label_fsd_hyper_charging.configure(state='enabled' if fsd_hyper_drive_charging else 'disabled')
+        self._label_fsd_jump.configure(state='enabled' if fsd_jump else 'disabled')
+        self._label_fsd_cooldown.configure(state='enabled' if fsd_cooldown else 'disabled')
+        self._label_hud_analysis_mode.configure(state='enabled' if analysis_mode else 'disabled')
 
     def _arrange_labels(self):
         labels = [
@@ -69,11 +71,11 @@ class StatusFrame(ttk.Frame):
         for i_row, row in enumerate(labels):
             for i_col, label in enumerate(row):
                 label.configure(state='disabled')
-                label.grid(column=i_col, row=i_row, padx=1, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
+                label.grid(column=i_col, row=i_row, padx=0, pady=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
     def _set_styles(self):
         self._style = ttk.Style()
-        self._style.configure('Status.TFrame', background='#DE9A01')
+        self._style.configure('Status.TFrame', background='#000000')
         self._style.configure('Status.TLabel', background='#DE9A01')
         self._style.map('Status.TLabel',
                         background=[('disabled', '#000000')],
