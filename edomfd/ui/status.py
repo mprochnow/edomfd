@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from edojournal import EDOStatus
+from edoevent import EDOStatus
 
 
 class StatusFrame(ttk.Frame):

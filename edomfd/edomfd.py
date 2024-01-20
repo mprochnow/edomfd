@@ -2,9 +2,11 @@ import functools
 import logging.config
 import queue
 
+import dateutil.parser
 import screeninfo
 
-from edojournal import EDOJournal, EDOStatus
+from edoevent import EDOStatus
+from edojournal import EDOJournal
 from ui import AppWindow
 
 logging.config.dictConfig({
@@ -29,10 +31,16 @@ logging.config.dictConfig({
     }
 })
 
+log = logging.getLogger(__name__)
+
 
 if __name__ == '__main__':
-    def status_cb(q: queue.Queue, status: EDOStatus):
-        q.put(status)
+    def event_cb(q: queue.Queue, event: dict):
+        if event['event'] == 'Status':
+            q.put(EDOStatus(event))
+        else:
+            timestamp = dateutil.parser.isoparse(event['timestamp'])
+            log.debug(f"New event: {timestamp.isoformat()} - {event['event']}")
 
     status_queue = queue.Queue()
 
@@ -41,7 +49,7 @@ if __name__ == '__main__':
 
     window = AppWindow(monitors, status_queue)
 
-    journal = EDOJournal(functools.partial(status_cb, status_queue))
+    journal = EDOJournal(functools.partial(event_cb, status_queue))
     journal.start()
 
     try:

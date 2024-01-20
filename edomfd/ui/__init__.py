@@ -4,7 +4,7 @@ from tkinter import ttk
 
 import screeninfo
 
-from edojournal import EDOStatus
+from edoevent import EDOStatus
 from ui.status import StatusFrame
 
 QUEUE_CHECK_TIME = 100  # ms
@@ -66,6 +66,7 @@ class AppWindow:
         self._tk.after(QUEUE_CHECK_TIME, self._update)
 
         while not self._status_queue.empty():
+            # TODO: Move update logic outside of UI
             s: EDOStatus = self._status_queue.get_nowait()
 
             self._status_frame.update_status(s)
