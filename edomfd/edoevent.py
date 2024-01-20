@@ -1,4 +1,92 @@
-class EDOStatus:
+import enum
+
+
+class EventType(enum.Enum):
+    @staticmethod
+    def _generate_next_value_(name, start, count, last_values):
+        return name
+
+    Status = enum.auto()
+    Location = enum.auto()
+    NavRoute = enum.auto()  # Only raised once when route is plotted
+    NavRouteClear = enum.auto()  # Raised before 'FSDJump' for last target in nav route
+    FSDTarget = enum.auto()  # Raised before 'FSDJump'
+    StartJump = enum.auto()  # Raised before 'FSDTarget'
+    FSDJump = enum.auto()  # Last of this in journal contains current star pos
+
+
+# class Event:
+#     event: EventType
+#
+#
+# class Location:
+#     star_system: str
+#     system_address: int
+#     star_pos: int[int, int, int]
+#     event: EventType = EventType.Location
+#
+#
+# class NavRoute(Event):  # 1
+#     class Route:
+#         star_class: str
+#         star_pos: int[int, int, int]
+#         star_system: str
+#         system_address: int
+#
+#     route: list[Route]
+#     event: EventType = EventType.NavRoute
+#
+#
+# class FSDTarget(Event):  # 2, 4
+#     name: str
+#     remaining_jumps_in_route: int
+#     star_class: str
+#     system_address: int
+#     event: EventType = EventType.FSDTarget
+#
+#
+# class StartJump(Event):  # 3, 6
+#     jump_type: str
+#     star_class: str
+#     star_system: str
+#     system_address: int
+#     taxi: bool
+#     event: EventType = EventType.StartJump
+#
+#
+# class FSDJump(Event):  # 5, 8
+#     body: str
+#     body_id: int
+#     body_type: str
+#     conflicts: list[dict]
+#     factions: list[dict]
+#     fuel_level: float
+#     fuel_used: float
+#     jump_dist: float
+#     multicrew: bool
+#     population: int
+#     star_pos: tuple[int, int, int]
+#     star_system: str
+#     system_address: int
+#     system_allegiance: str
+#     system_economy: str
+#     system_economy_localized: str
+#     system_faction: dict[str, str]
+#     system_government: str
+#     system_government_localized: str
+#     system_second_economy: str
+#     system_second_economy_localised: str
+#     system_security: str
+#     system_security_localised: str
+#     taxi: bool
+#     event: EventType = EventType.FSDJump
+#
+#
+# class NavRouteClear(Event):  # 7
+#     event: EventType = EventType.NavRouteClear
+
+
+class Status:
     def __init__(self, j):
         self.latitude = j.get('Latitude')
         self.longitude = j.get('Longitude')

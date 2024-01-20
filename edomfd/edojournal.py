@@ -15,19 +15,32 @@ from windows import get_known_folder_path, FOLDERID_SavedGames
 log = logging.getLogger(__name__)
 
 REGEX_JOURNAL = re.compile(r'^Journal\.\d{4}-\d{2}-\d{2}T\d{6}\.\d{2}\.log$')
-FILENAME_NAV_ROUTE = 'NavRoute.json'
 FILENAME_STATUS = 'Status.json'
 
 
-class EDOJournal(FileSystemEventHandler):
+def get_journal_dir() -> str:
+    journal_dir = pathlib.Path(
+        get_known_folder_path(FOLDERID_SavedGames)) / 'Frontier Developments' / 'Elite Dangerous'
+
+    return os.path.expanduser(journal_dir)
+
+
+def get_filename_of_newest_journal(journal_dir) -> str | None:
+    journal_files = (x for x in os.listdir(journal_dir) if REGEX_JOURNAL.search(x))
+    if journal_files:
+        journals_dir_path = pathlib.Path(journal_dir)
+        journal_files = (journals_dir_path / pathlib.Path(x) for x in journal_files)
+        return str(max(journal_files, key=os.path.getctime))
+
+    return None
+
+
+class Journal(FileSystemEventHandler):
     def __init__(self, event_cb: Callable) -> None:
         self._event_cb: Callable = event_cb
 
-        journal_dir = pathlib.Path(
-            get_known_folder_path(FOLDERID_SavedGames)) / 'Frontier Developments' / 'Elite Dangerous'
-
-        self._journal_dir = os.path.expanduser(journal_dir)
-        self._journal_filename: str | None = self._get_journal_newest_filename()
+        self._journal_dir: str = get_journal_dir()
+        self._journal_filename: str | None = get_filename_of_newest_journal(self._journal_dir)
         self._journal_file: BinaryIO | None = None
         self._journal_pos = -1
 
@@ -40,6 +53,10 @@ class EDOJournal(FileSystemEventHandler):
             self._journal_file = open(self._journal_filename, 'rb', 0)
             self._journal_file.seek(0, SEEK_END)
             self._journal_pos = self._journal_file.tell()
+
+    @property
+    def journal_dir(self) -> str:
+        return self._journal_dir
 
     def start(self) -> None:
         self._observer.start()
@@ -104,12 +121,3 @@ class EDOJournal(FileSystemEventHandler):
             self._event_cb(json.loads(line))
 
         self._journal_pos = self._journal_file.tell()
-
-    def _get_journal_newest_filename(self) -> str | None:
-        journal_files = (x for x in os.listdir(self._journal_dir) if REGEX_JOURNAL.search(x))
-        if journal_files:
-            journals_dir_path = pathlib.Path(self._journal_dir)
-            journal_files = (journals_dir_path / pathlib.Path(x) for x in journal_files)
-            return str(max(journal_files, key=os.path.getctime))
-
-        return None
