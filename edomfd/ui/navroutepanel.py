@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import edostate
+from ui import theme
 
 
 class NavRoutePanel(ttk.Frame):
@@ -21,12 +22,14 @@ class NavRoutePanel(ttk.Frame):
         self._tree.heading('star_class', text="Star Class", anchor=tk.W)
         self._tree.heading('distance', text="Distance", anchor=tk.W)
 
+        self._tree.tag_configure('entry', background=theme.ENTRY_BACKGROUND)
+
     def set(self, nav_route: list[edostate.RouteEntry]) -> None:
         self._tree.delete(*self._tree.get_children())
 
         for entry in nav_route:
             if not self._tree.exists(entry.system_address):
-                self._tree.insert('', tk.END, iid=entry.system_address,
+                self._tree.insert('', tk.END, iid=entry.system_address, tags='entry',
                                   values=(entry.star_system, entry.star_class, f"{entry.distance:.1f}Ly"))
 
     def _set_styles(self) -> None:

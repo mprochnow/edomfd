@@ -3,6 +3,7 @@ from tkinter import ttk
 
 import screeninfo
 
+from ui import theme
 from ui.geocoordinatespanel import GeoCoordinatesPanel
 from ui.navroutepanel import NavRoutePanel
 from ui.statuspanel import StatusPanel
@@ -17,13 +18,10 @@ class AppWindow:
         self._fullscreen: bool = False
 
         self.tk = tk.Tk()
+        theme.apply_theme()
         self.tk.title("EDO MFD")
         self.tk.columnconfigure(0, weight=1)
         self.tk.rowconfigure(0, weight=1)
-
-        self._style = ttk.Style()
-        self._style.theme_use('default')
-        self._style.configure('TFrame', background='#000000')
 
         self._frame = ttk.Frame(self.tk)
         self._frame.columnconfigure(0, weight=1)
