@@ -38,7 +38,11 @@ class CurrentState:
         self._route: list[RouteEntry] = []
         self._remaining_jumps_in_route: int = 0
 
+        self._load_nav_route()
         self._load_newest_journal()
+
+        if self._remaining_jumps_in_route > 0:
+            self._event_cb(self, EventType.NavRoute)
 
     @property
     def status(self) -> edoevent.Status:
