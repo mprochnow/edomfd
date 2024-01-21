@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import math
 import os.path
 from typing import Callable
 
@@ -19,9 +20,11 @@ class StarPos:
 
 @dataclasses.dataclass
 class RouteEntry:
+    system_address: int
     star_system: str
     star_class: str
     star_pos: StarPos
+    distance: float
 
 
 class CurrentState:
@@ -53,6 +56,7 @@ class CurrentState:
         try:
             event_type: EventType = EventType(event['event'])
         except ValueError as e:
+            # print(event['event'])
             return
 
         self._consume_event(event_type, event)
@@ -84,17 +88,35 @@ class CurrentState:
 
         x1, y1, z1 is your source, or where you are starting from. x2, y2, z2 is destination
         """
+        self._route.clear()
+
         filename: str = os.path.join(self._journal_dir, FILENAME_NAV_ROUTE)
         with open(filename, 'rb') as f:
             content: bytes = f.read().strip()
             if content:
                 data: dict = json.loads(content)
+                route: list[dict] = data['Route']
 
-                for entry in data['Route']:
-                    route_entry = RouteEntry(entry['StarSystem'], entry['StarClass'], StarPos(*entry['StarPos']))
+                for i, entry in enumerate(route):
+                    distance: float = 0
+                    if i > 0:
+                        distance = math.sqrt(
+                            math.pow(route[i-1]['StarPos'][0] - route[i]['StarPos'][0], 2) +
+                            math.pow(route[i-1]['StarPos'][1] - route[i]['StarPos'][1], 2) +
+                            math.pow(route[i-1]['StarPos'][2] - route[i]['StarPos'][2], 2)
+                        )
+
+                    route_entry = RouteEntry(
+                        entry['SystemAddress'],
+                        entry['StarSystem'],
+                        entry['StarClass'],
+                        StarPos(*entry['StarPos']),
+                        distance
+                    )
+
                     self._route.append(route_entry)
 
-                self._remaining_jumps_in_route = len(self._route)
+                self._remaining_jumps_in_route = len(self._route)-1
 
     def _load_newest_journal(self):
         filename = edojournal.get_filename_of_newest_journal(self._journal_dir)

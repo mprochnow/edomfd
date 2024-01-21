@@ -1,6 +1,5 @@
 import functools
 import logging.config
-import pprint
 
 import screeninfo
 
@@ -49,10 +48,8 @@ if __name__ == '__main__':
                 )
 
                 win.tk.after(0, win.geocoordinates_panel.set, s.latitude, s.longitude, s.heading, s.altitude)
-            case EventType.NavRoute | EventType.FSDTarget:
-                pprint.pprint(state.route)
-            case EventType.FSDJump:
-                print(state.star_system)
+            case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
+                win.tk.after(0, win.nav_route_panel.set, state.route)
 
     # Needs to be called before Tk is initialized because it might mess with DPI awareness
     monitors = list(screeninfo.get_monitors())

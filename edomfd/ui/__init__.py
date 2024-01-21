@@ -4,6 +4,7 @@ from tkinter import ttk
 import screeninfo
 
 from ui.geocoordinatespanel import GeoCoordinatesPanel
+from ui.navroutepanel import NavRoutePanel
 from ui.statuspanel import StatusPanel
 
 QUEUE_CHECK_TIME = 100  # ms
@@ -21,19 +22,24 @@ class AppWindow:
         self.tk.rowconfigure(0, weight=1)
 
         self._style = ttk.Style()
-        self._style.configure('TFrame', background='#DE9A01')
+        self._style.theme_use('default')
+        self._style.configure('TFrame', background='#000000')
 
         self._frame = ttk.Frame(self.tk)
         self._frame.columnconfigure(0, weight=1)
-        self._frame.rowconfigure(0, weight=0)
-        self._frame.rowconfigure(1, weight=1)
+        self._frame.rowconfigure(0, weight=1)
+        self._frame.rowconfigure(1, weight=0)
+        self._frame.rowconfigure(2, weight=0)
         self._frame.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
+        self.nav_route_panel: NavRoutePanel = NavRoutePanel(self._frame)
+        self.nav_route_panel.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
+
         self.status_panel: StatusPanel = StatusPanel(self._frame)
-        self.status_panel.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.status_panel.grid(column=0, row=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self.geocoordinates_panel: GeoCoordinatesPanel = GeoCoordinatesPanel(self._frame)
-        self.geocoordinates_panel.grid(column=0, row=1, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.geocoordinates_panel.grid(column=0, row=2, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self.tk.bind('<Escape>', self._close)
         self.tk.bind('<F11>', self._toggle_fullscreen)
