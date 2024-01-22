@@ -37,6 +37,8 @@ class CurrentState:
         self._star_system: str | None = None
         self._route: list[RouteEntry] = []
         self._remaining_jumps_in_route: int = 0
+        self._cargo_capacity: int = 0
+        self._cargo_count: int = 0
 
         self._load_nav_route()
         self._load_newest_journal()
@@ -83,6 +85,10 @@ class CurrentState:
             case EventType.FSDJump:
                 self._star_system = event['StarSystem']
                 self._star_pos = StarPos(*event['StarPos'])
+            case EventType.Loadout:
+                self._cargo_capacity = event['CargoCapacity']
+            case EventType.Cargo:
+                self._cargo_count = event['Count']
 
     def _load_nav_route(self) -> None:
         """
@@ -129,5 +135,5 @@ class CurrentState:
                 for line in f:
                     event = json.loads(line)
                     event_type = event['event']
-                    if event_type in ('Location', 'FSDJump'):
+                    if event_type in ('Location', 'FSDJump', 'CargoCapacity', 'Cargo'):
                         self._consume_event(EventType(event_type), event)

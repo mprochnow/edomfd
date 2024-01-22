@@ -68,4 +68,4 @@ class StatusPanel(ttk.Frame):
         for i_row, row in enumerate(labels):
             for i_col, label in enumerate(row):
                 label.configure(state='disabled')
-                label.grid(column=i_col, row=i_row, padx=0, pady=0, sticky=tk.N+tk.E+tk.S+tk.W)
+                label.grid(column=i_col, row=i_row, padx=1, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)

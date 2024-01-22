@@ -12,7 +12,7 @@ ENTRY_BACKGROUND = '#471A01'
 def create_widget_styles(style: ttk.Style) -> None:
     style.configure('TFrame', background=PANEL_BACKGROUND)
 
-    style.configure('TLabel', background=TEXT_COLOR, foreground=PANEL_BACKGROUND)
+    style.configure('TLabel', background=TEXT_COLOR, foreground=PANEL_BACKGROUND, padding=(1, 0, 1, 1))
     style.map('TLabel', background=[('disabled', ENTRY_BACKGROUND)], foreground=[('disabled', TEXT_COLOR)])
 
     m = tkfont.nametofont("TkDefaultFont").metrics()

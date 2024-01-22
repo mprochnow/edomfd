@@ -13,6 +13,8 @@ class EventType(enum.Enum):
     FSDTarget = enum.auto()  # Raised before 'FSDJump'
     StartJump = enum.auto()  # Raised before 'FSDTarget'
     FSDJump = enum.auto()  # Last of this in journal contains current star pos
+    Loadout = enum.auto()
+    Cargo = enum.auto()
 
 
 # class Event:
