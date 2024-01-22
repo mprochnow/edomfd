@@ -29,16 +29,20 @@ class AppWindow:
         self._frame.rowconfigure(0, weight=1)
         self._frame.rowconfigure(1, weight=0)
         self._frame.rowconfigure(2, weight=0)
+        self._frame.rowconfigure(3, weight=0)
         self._frame.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self.nav_route_panel: NavRoutePanel = NavRoutePanel(self._frame)
-        self.nav_route_panel.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.nav_route_panel.grid(column=0, row=0, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
+
+        self.cargo_panel: CargoPanel = CargoPanel(self._frame)
+        self.cargo_panel.grid(column=0, row=1, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self.status_panel: StatusPanel = StatusPanel(self._frame)
-        self.status_panel.grid(column=0, row=1, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.status_panel.grid(column=0, row=2, pady=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self.geocoordinates_panel: GeoCoordinatesPanel = GeoCoordinatesPanel(self._frame)
-        self.geocoordinates_panel.grid(column=0, row=2, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.geocoordinates_panel.grid(column=0, row=3, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
         self._root.bind('<Escape>', self._close)
         self._root.bind('<F11>', self._toggle_fullscreen)

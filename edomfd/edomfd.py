@@ -27,6 +27,9 @@ class Main:
     def __call__(self):
         self._journal.start()
 
+        self._tk.after(0, self._window.nav_route_panel.set, self._current_state.route)
+        self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity)
+
         try:
             self._window.show()
         except KeyboardInterrupt:
@@ -50,7 +53,10 @@ class Main:
 
                 self._tk.after(0, self._window.geocoordinates_panel.set, s.latitude, s.longitude, s.heading, s.altitude)
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
-                self._tk.after(0, self._.nav_route_panel.set, state.route)
+                self._tk.after(0, self._window.nav_route_panel.set, state.route)
+
+            case EventType.Cargo | EventType.Loadout:
+                self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity)
 
 
 if __name__ == '__main__':

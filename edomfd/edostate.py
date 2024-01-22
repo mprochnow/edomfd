@@ -43,9 +43,6 @@ class CurrentState:
         self._load_nav_route()
         self._load_newest_journal()
 
-        if self._remaining_jumps_in_route > 0:
-            self._event_cb(self, EventType.NavRoute)
-
     @property
     def status(self) -> edoevent.Status:
         return self._status
@@ -57,6 +54,10 @@ class CurrentState:
     @property
     def star_system(self) -> tuple[str, StarPos]:
         return self._star_system, self._star_pos
+
+    @property
+    def cargo_capacity(self):
+        return self._cargo_count, self._cargo_capacity
 
     def consume_event(self, event: dict) -> None:
         try:
@@ -135,5 +136,5 @@ class CurrentState:
                 for line in f:
                     event = json.loads(line)
                     event_type = event['event']
-                    if event_type in ('Location', 'FSDJump', 'CargoCapacity', 'Cargo'):
+                    if event_type in ('Location', 'FSDJump', 'Loadout', 'Cargo'):
                         self._consume_event(EventType(event_type), event)
