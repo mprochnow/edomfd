@@ -16,12 +16,12 @@ def create_widget_styles(style: ttk.Style) -> None:
     style.map('TLabel', background=[('disabled', ENTRY_BACKGROUND)], foreground=[('disabled', TEXT_COLOR)])
 
     m = tkfont.nametofont("TkDefaultFont").metrics()
-    y_max = m['ascent'] + m['descent']
+    y_max = m['ascent'] + m['descent'] + 4
 
     style.configure('Treeview', fieldbackground=PANEL_BACKGROUND, borderwidth=0, background=PANEL_BACKGROUND,
                     foreground=TEXT_COLOR, rowheight=y_max)
-    style.configure('Treeview.Heading', background=PANEL_BACKGROUND, foreground=TEXT_COLOR, relief=tk.FLAT)
-    style.map('Treeview.Heading', background=[('active', PANEL_BACKGROUND)])
+    style.configure('Treeview.Heading', background=ENTRY_BACKGROUND, foreground=TEXT_COLOR, relief=tk.FLAT)
+    style.map('Treeview.Heading', background=[('active', ENTRY_BACKGROUND)])
 
 
 def apply_theme() -> None:
