@@ -18,9 +18,9 @@ def create_widget_styles(style: ttk.Style) -> None:
     m = tkfont.nametofont("TkDefaultFont").metrics()
     y_max = m['ascent'] + m['descent']
 
-    style.configure('Treeview', fieldbackground=PANEL_BACKGROUND, borderwidth=0, background=TEXT_COLOR,
+    style.configure('Treeview', fieldbackground=PANEL_BACKGROUND, borderwidth=0, background=PANEL_BACKGROUND,
                     foreground=TEXT_COLOR, rowheight=y_max)
-    style.configure('Treeview.Heading', background=PANEL_BACKGROUND, foreground=PANEL_BACKGROUND, relief=tk.FLAT)
+    style.configure('Treeview.Heading', background=PANEL_BACKGROUND, foreground=TEXT_COLOR, relief=tk.FLAT)
     style.map('Treeview.Heading', background=[('active', PANEL_BACKGROUND)])
 
 
