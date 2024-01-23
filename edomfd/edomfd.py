@@ -28,7 +28,8 @@ class Main:
         self._journal.start()
 
         self._tk.after(0, self._window.nav_route_panel.set, self._current_state.route)
-        self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity)
+        self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity,
+                       self._current_state.cargo_list)
 
         try:
             self._window.show()
@@ -56,7 +57,7 @@ class Main:
                 self._tk.after(0, self._window.nav_route_panel.set, state.route)
 
             case EventType.Cargo | EventType.Loadout:
-                self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity)
+                self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity, state.cargo_list)
 
 
 if __name__ == '__main__':
