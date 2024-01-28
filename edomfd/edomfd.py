@@ -30,6 +30,7 @@ class Main:
         self._tk.after(0, self._window.nav_route_panel.set, self._current_state.route)
         self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity,
                        self._current_state.cargo_list)
+        self._tk.after(0, self._window.bounty_panel.set, self._current_state.bounty)
 
         try:
             self._window.show()
@@ -58,6 +59,9 @@ class Main:
 
             case EventType.Cargo | EventType.Loadout:
                 self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity, state.cargo_list)
+
+            case EventType.Bounty | EventType.RedeemVoucher:
+                self._tk.after(0, self._window.bounty_panel.set, state.bounty)
 
 
 if __name__ == '__main__':

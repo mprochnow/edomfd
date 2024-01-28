@@ -47,6 +47,7 @@ class CurrentState:
         self._cargo_list: list[CargoListEntry] = []
         self._cargo_capacity: int = 0
         self._cargo_count: int = 0
+        self._bounty: int = 0
 
         self._load_nav_route()
         self._load_newest_journal()
@@ -71,11 +72,14 @@ class CurrentState:
     def cargo_capacity(self) -> tuple[int, int]:
         return self._cargo_count, self._cargo_capacity
 
+    @property
+    def bounty(self) -> int:
+        return self._bounty
+
     def consume_event(self, event: dict) -> None:
         try:
             event_type: EventType = EventType(event['event'])
         except ValueError as e:
-            # print(event['event'])
             return
 
         self._consume_event(event_type, event)
@@ -102,6 +106,11 @@ class CurrentState:
                 self._cargo_capacity = event['CargoCapacity']
             case EventType.Cargo:
                 self._load_cargo_list()
+            case EventType.Bounty:
+                self._bounty += event.get('TotalReward', event.get('Reward', 0))
+            case EventType.RedeemVoucher:
+                if event['Type'] == 'bounty':
+                    self._bounty = 0
 
     def _load_nav_route(self) -> None:
         self._route.clear()
@@ -158,6 +167,9 @@ class CurrentState:
             with open(filename, 'rb') as f:
                 for line in f:
                     event = json.loads(line)
-                    event_type = event['event']
-                    if event_type in ('Location', 'FSDJump', 'Loadout', 'Cargo'):
-                        self._consume_event(EventType(event_type), event)
+                    try:
+                        event_type = EventType(event['event'])
+                    except ValueError:
+                        continue
+
+                    self._consume_event(event_type, event)
