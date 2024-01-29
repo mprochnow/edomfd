@@ -25,6 +25,11 @@ class AppWindow:
         self._root.columnconfigure(0, weight=1)
         self._root.rowconfigure(0, weight=1)
 
+        self._context_menu = tk.Menu(self._root, tearoff=0)
+        self._context_menu.add_command(label="Quit", command=self.destroy)
+
+        self._root.bind('<3>', lambda e: self._context_menu.post(e.x_root, e.y_root))
+
         self._frame = ttk.Frame(self._root)
         self._frame.columnconfigure(0, weight=1)
         self._frame.rowconfigure(0, weight=1)
@@ -57,7 +62,7 @@ class AppWindow:
     def show(self):
         self._root.mainloop()
 
-    def destroy(self):
+    def destroy(self, _=None):
         self._root.destroy()
 
     def _maybe_move_to_secondary_monitor(self):
@@ -67,10 +72,10 @@ class AppWindow:
                 self._toggle_fullscreen()
                 break
 
-    def _close(self, event=None):
+    def _close(self, _=None):
         self._root.quit()
 
-    def _toggle_fullscreen(self, event=None):
+    def _toggle_fullscreen(self, _=None):
         self._fullscreen = not self._fullscreen
 
         if self._fullscreen:
