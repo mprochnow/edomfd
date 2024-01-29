@@ -26,8 +26,8 @@ class CargoPanel(ttk.Frame):
         self._tree.tag_configure('entry', background=theme.ENTRY_BACKGROUND)
         self._tree.heading('name', text="Name", anchor=tk.W)
 
-        column_width = font.measure('Count ')
-        self._tree.heading('count', text="Count", anchor=tk.W)
+        column_width = font.measure('0000 ')
+        self._tree.heading('count', text="Qty", anchor=tk.W)
         self._tree.column('count', width=column_width, stretch=False)
 
     def set(self, cargo_used: int, cargo_capacity: int, cargo_list: list[CargoListEntry]) -> None:
