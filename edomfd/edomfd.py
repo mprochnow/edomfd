@@ -27,7 +27,8 @@ class Main:
     def __call__(self):
         self._journal.start()
 
-        self._tk.after(0, self._window.nav_route_panel.set, self._current_state.route)
+        self._tk.after(0, self._window.nav_route_panel.set_current_system, self._current_state.star_system[0])
+        self._tk.after(0, self._window.nav_route_panel.set_route, self._current_state.route)
         self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity,
                        self._current_state.cargo_list)
         self._tk.after(0, self._window.bounty_panel.set, self._current_state.bounty)
@@ -54,8 +55,11 @@ class Main:
                 )
 
                 self._tk.after(0, self._window.geocoordinates_panel.set, s.latitude, s.longitude, s.heading, s.altitude)
+            case EventType.Location:
+                self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
-                self._tk.after(0, self._window.nav_route_panel.set, state.route)
+                self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
+                self._tk.after(0, self._window.nav_route_panel.set_route, state.route)
 
             case EventType.Cargo | EventType.Loadout:
                 self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity, state.cargo_list)

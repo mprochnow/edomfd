@@ -11,13 +11,18 @@ class NavRoutePanel(ttk.Frame):
         super().__init__(parent, **kwargs)
 
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=1)
 
         font = tkfont.nametofont("TkDefaultFont")
 
+        self._label_star_system = ttk.Label(self, text="Current system: -")
+        self._label_star_system.configure(state='disabled')
+        self._label_star_system.grid(column=0, row=0, pady=1, sticky=tk.N+tk.E+tk.S+tk.W)
+
         self._tree = ttk.Treeview(self, show="headings", columns=('system', 'star_class', 'distance'),
                                   selectmode='none', style='NavRoute.Treeview')
-        self._tree.grid(column=0, row=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self._tree.grid(column=0, row=1, sticky=tk.N+tk.E+tk.S+tk.W)
         self._tree.tag_configure('entry', background=theme.ENTRY_BACKGROUND)
         self._tree.heading('system', text="System", anchor=tk.W)
 
@@ -29,7 +34,10 @@ class NavRoutePanel(ttk.Frame):
         self._tree.heading('distance', text="Distance", anchor=tk.W)
         self._tree.column('distance', minwidth=column_width, width=column_width, stretch=False)
 
-    def set(self, nav_route: list[edostate.RouteEntry]) -> None:
+    def set_current_system(self, name: str) -> None:
+        self._label_star_system.configure(text=f"Current system: {name}")
+
+    def set_route(self, nav_route: list[edostate.RouteEntry]) -> None:
         self._tree.delete(*self._tree.get_children())
 
         for entry in nav_route:
