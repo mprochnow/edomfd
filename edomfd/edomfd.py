@@ -47,13 +47,9 @@ class Main:
                 s: edoevent.Status = state.status
 
                 self._tk.after(
-                    0, self._window.status_panel.set, s.docked, s.landed, s.landing_gear, s.shields_up, s.supercruise,
-                    s.flight_assist_off, s.hardpoints_deployed, s.lights_on, s.night_vision, s.cargo_scoop_deployed,
-                    s.silent_running, s.scooping_fuel, s.fsd_mass_locked, s.fsd_charging, s.fsd_hyper_charging,
-                    s.fsd_jump, s.fsd_cooldown, s.analysis_mode
+                    0, self._window.status_panel.set, s.fsd_mass_locked, s.cargo_scoop_deployed, s.landing_gear,
+                    s.hardpoints_deployed, s.lights_on, s.night_vision
                 )
-
-                self._tk.after(0, self._window.geocoordinates_panel.set, s.latitude, s.longitude, s.heading, s.altitude)
             case EventType.Location:
                 self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
