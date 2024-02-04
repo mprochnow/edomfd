@@ -8,8 +8,6 @@ from ui.cargopanel import CargoPanel
 from ui.navroutepanel import NavRoutePanel
 from ui.statuspanel import StatusPanel
 
-QUEUE_CHECK_TIME = 100  # ms
-
 
 class AppWindow:
     def __init__(self, monitors: list[screeninfo.Monitor], root: tk.Tk):

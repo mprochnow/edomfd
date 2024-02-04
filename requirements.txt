@@ -1,6 +1,10 @@
 screeninfo==0.8.1
 watchdog==3.0.0
 python-dateutil==2.8.2
+pytkfaicons==0.0.11
 
 # Dependency of python-dateutil
 six==1.16.0
+
+# Dependency of pytkfaicons
+Pillow==10.2.0

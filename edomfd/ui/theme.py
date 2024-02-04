@@ -11,6 +11,7 @@ ENTRY_BACKGROUND = '#471A01'
 
 def create_widget_styles(style: ttk.Style) -> None:
     style.configure('TFrame', background=PANEL_BACKGROUND)
+    style.configure('Content.TFrame', background=ENTRY_BACKGROUND)
 
     style.configure('TLabel', background=TEXT_COLOR, foreground=PANEL_BACKGROUND, padding=(1, 0, 1, 1))
     style.map('TLabel', background=[('disabled', ENTRY_BACKGROUND)], foreground=[('disabled', TEXT_COLOR)])
@@ -23,6 +24,8 @@ def create_widget_styles(style: ttk.Style) -> None:
     style.configure('Treeview.Heading', background=ENTRY_BACKGROUND, foreground=TEXT_COLOR, relief=tk.FLAT)
     style.map('Treeview.Heading', background=[('active', ENTRY_BACKGROUND)])
 
+    style.configure('TButton', background=ENTRY_BACKGROUND)
+
 
 def apply_theme() -> None:
     style = ttk.Style()
@@ -30,10 +33,3 @@ def apply_theme() -> None:
     style.theme_use('edomfd')
 
     create_widget_styles(style)
-
-    # print(style.layout('Treeview.Item'))
-    # print(style.element_options('Treeview.Item'))
-    # print(style.element_options('Treeview.Item.padding'))
-    # print(style.element_options('Treeview.Item.indicator'))
-    # print(style.element_options('Treeview.Item.image'))
-    # print(style.element_options('Treeview.Item.text'))
