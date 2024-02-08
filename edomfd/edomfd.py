@@ -50,7 +50,7 @@ class Main:
                     0, self._window.status_panel.set, s.fsd_mass_locked, s.cargo_scoop_deployed, s.landing_gear,
                     s.hardpoints_deployed, s.lights_on, s.night_vision
                 )
-            case EventType.Location:
+            case EventType.Location | EventType.FSDJump:
                 self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
                 # TODO: Copy system name to clipboard?
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
