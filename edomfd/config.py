@@ -1,3 +1,7 @@
+# Copyright (C) Martin J. Prochnow
+# Licensed under the GNU General Public License v3
+# See LICENSE.MD
+
 import logging.config
 
 logging.config.dictConfig({

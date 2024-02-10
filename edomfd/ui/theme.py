@@ -1,3 +1,7 @@
+# Copyright (C) Martin J. Prochnow
+# Licensed under the GNU General Public License v3
+# See LICENSE.MD
+
 # https://github.com/israel-dryer/ttk-arc-clone/blob/master/arc_theme_ttk.py
 import tkinter as tk
 import tkinter.font as tkfont
