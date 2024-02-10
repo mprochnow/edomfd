@@ -6,9 +6,8 @@ import tkinter as tk
 import tkinter.font as tkfont
 from tkinter import ttk
 
-from pytkfaicons.fonts import get_font_icon
-
 import edostate
+import fa
 from ui import theme
 
 
@@ -36,8 +35,7 @@ class NavRoutePanel(ttk.Frame):
 
         fm = tkfont.nametofont("TkDefaultFont").metrics()
 
-        self._copy_icon = get_font_icon('copy', style='regular', height=fm['ascent']-fm['descent'],
-                                        bg=theme.ENTRY_BACKGROUND, fg=theme.TEXT_COLOR)
+        self._copy_icon = fa.icon.get_tk_icon('copy', fa.Style.REGULAR, fm['ascent']-fm['descent'], theme.TEXT_COLOR)
         self._copy_button = ttk.Button(self._frame, image=self._copy_icon, command=self._copy_system_name_to_clipboard)
         self._copy_button.grid(column=1, row=0, sticky=tk.N+tk.S)
 
