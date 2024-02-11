@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageTk
 from PIL.ImageFont import FreeTypeFont
 from PIL.ImageTk import PhotoImage
 
-from meta import meta
+from .meta import meta
 
 
 class Style(enum.StrEnum):
