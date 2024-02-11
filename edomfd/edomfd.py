@@ -15,6 +15,10 @@
 # along with EDOMFD.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import msvcrt
+import os.path
+import pathlib
+from types import TracebackType
 
 import screeninfo
 import tkinter as tk
@@ -25,18 +29,48 @@ from edoevent import EventType
 from edojournal import get_journal_dir, Journal
 from ui.appwindow import AppWindow
 
+LOCK_FILENAME = 'edomfd.lock'
+
 log = logging.getLogger(__name__)
 
 
+class WindowsFileLock:
+    class Locked(Exception):
+        pass
+
+    def __init__(self, path: str) -> None:
+        self._path: str = path
+        self._fd: int | None = None
+
+    def __enter__(self) -> 'WindowsFileLock':
+        self._fd = os.open(self._path, os.O_RDWR | os.O_CREAT | os.O_TRUNC)
+        try:
+            msvcrt.locking(self._fd, msvcrt.LK_NBLCK, 1)
+        except PermissionError:
+            raise WindowsFileLock.Locked()
+
+        return self
+
+    def __exit__(
+            self,
+            exc_type: type[BaseException] | None,
+            exc_value: BaseException | None,
+            traceback: TracebackType | None,
+    ) -> None:
+        msvcrt.locking(self._fd, msvcrt.LK_UNLCK, 1)
+        os.close(self._fd)
+        pathlib.Path(self._path).unlink()
+
+
 class Main:
-    def __init__(self):
+    def __init__(self, journal_dir: str) -> None:
         # Needs to be called before Tk is initialized because it might mess with DPI awareness
         monitors = list(screeninfo.get_monitors())
 
         self._tk = tk.Tk()
         self._window = AppWindow(monitors, self._tk)
 
-        self._current_state = edostate.CurrentState(get_journal_dir(), self._event_cb)
+        self._current_state = edostate.CurrentState(journal_dir, self._event_cb)
 
         self._journal = Journal(self._current_state.consume_event)
 
@@ -78,4 +112,11 @@ class Main:
 
 
 if __name__ == '__main__':
-    Main()()
+    journal_dir = get_journal_dir()
+    lock_file = os.path.join(journal_dir, LOCK_FILENAME)
+
+    try:
+        with WindowsFileLock(lock_file):
+            Main(journal_dir)()
+    except WindowsFileLock.Locked:
+        print('Already running.')
