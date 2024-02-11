@@ -110,7 +110,11 @@ class CurrentState:
             case EventType.NavRoute:
                 self._load_nav_route()
             case EventType.FSDTarget:
-                self._remaining_jumps_in_route = event['RemainingJumpsInRoute']
+                try:
+                    self._remaining_jumps_in_route = event['RemainingJumpsInRoute']
+                except KeyError:
+                    self._route.clear()
+                    self._remaining_jumps_in_route = 0
             case EventType.NavRouteClear:
                 self._route.clear()
                 self._remaining_jumps_in_route = 0
