@@ -7,8 +7,7 @@ import tkinter.font as tkfont
 from tkinter import ttk
 
 import edostate
-import fa
-from ui import theme
+from ui import theme, fa
 
 
 class NavRoutePanel(ttk.Frame):

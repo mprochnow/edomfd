@@ -13,6 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with EDOMFD.  If not, see <http://www.gnu.org/licenses/>.
+
 import logging
 
 import screeninfo
@@ -22,7 +23,7 @@ import edoevent
 import edostate
 from edoevent import EventType
 from edojournal import get_journal_dir, Journal
-from ui import AppWindow
+from ui.appwindow import AppWindow
 
 log = logging.getLogger(__name__)
 
