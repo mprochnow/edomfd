@@ -74,7 +74,7 @@ class Main:
 
         self._journal = Journal(self._current_state.consume_event)
 
-    def __call__(self):
+    def __call__(self) -> None:
         self._journal.start()
 
         self._tk.after(0, self._window.nav_route_panel.set_current_system, self._current_state.star_system[0])
@@ -91,7 +91,7 @@ class Main:
 
         log.debug("Bye!")
 
-    def _event_cb(self, state: edostate.CurrentState, event_type: EventType):
+    def _event_cb(self, state: edostate.CurrentState, event_type: EventType) -> None:
         match event_type:
             case EventType.Status:
                 s: edoevent.Status = state.status
