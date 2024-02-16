@@ -9,6 +9,7 @@ import screeninfo
 
 from ui import theme
 from ui.cargopanel import CargoPanel
+from ui.landingpadpanel import LandingPadPanel
 from ui.navroutepanel import NavRoutePanel
 from ui.statuspanel import StatusPanel
 
@@ -38,6 +39,8 @@ class AppWindow:
         self._frame.rowconfigure(1, weight=0)
         self._frame.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
 
+        self.landing_pad_panel: LandingPadPanel = LandingPadPanel(self._frame)
+
         self.nav_route_panel: NavRoutePanel = NavRoutePanel(self._frame)
         self.nav_route_panel.grid(column=0, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
@@ -52,11 +55,23 @@ class AppWindow:
 
         self._maybe_move_to_secondary_monitor()
 
+        self.show_landing_pad_panel(True)
+
     def show(self):
         self._root.mainloop()
 
     def destroy(self, _=None):
         self._root.destroy()
+
+    def show_landing_pad_panel(self, show: bool) -> None:
+        if show:
+            self.landing_pad_panel.grid(column=0, row=0, columnspan=2, sticky=tk.N + tk.E + tk.S + tk.W)
+            self.nav_route_panel.grid_forget()
+            self.cargo_panel.grid_forget()
+        else:
+            self.landing_pad_panel.grid_forget()
+            self.nav_route_panel.grid(column=0, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
+            self.cargo_panel.grid(column=1, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
     def _maybe_move_to_secondary_monitor(self):
         for monitor in self._monitors:
