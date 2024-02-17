@@ -55,8 +55,6 @@ class AppWindow:
 
         self._maybe_move_to_secondary_monitor()
 
-        self.show_landing_pad_panel(True)
-
     def show(self):
         self._root.mainloop()
 
