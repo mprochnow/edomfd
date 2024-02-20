@@ -61,12 +61,14 @@ class AppWindow:
     def destroy(self, _=None):
         self._root.destroy()
 
-    def show_landing_pad_panel(self, show: bool) -> None:
+    def show_landing_pad_panel(self, show: bool, landing_pad: int | None = None) -> None:
         if show:
+            self.landing_pad_panel.highlight_pad(landing_pad)
             self.landing_pad_panel.grid(column=0, row=0, columnspan=2, sticky=tk.N + tk.E + tk.S + tk.W)
             self.nav_route_panel.grid_forget()
             self.cargo_panel.grid_forget()
         else:
+            self.landing_pad_panel.highlight_pad(None)
             self.landing_pad_panel.grid_forget()
             self.nav_route_panel.grid(column=0, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
             self.cargo_panel.grid(column=1, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)

@@ -34,14 +34,14 @@ class NavRoutePanel(ttk.Frame):
 
         fm = tkfont.nametofont("TkDefaultFont").metrics()
 
-        self._copy_icon = fa.icon.get_tk_icon('copy', fa.Style.REGULAR, fm['ascent']-fm['descent'], theme.TEXT_COLOR)
+        self._copy_icon = fa.icon.get_tk_icon('copy', fa.Style.REGULAR, fm['ascent'] - fm['descent'], theme.COLOR_TEXT)
         self._copy_button = ttk.Button(self._frame, image=self._copy_icon, command=self._copy_system_name_to_clipboard)
         self._copy_button.grid(column=1, row=0, sticky=tk.N+tk.S)
 
         self._tree = ttk.Treeview(self, show="headings", columns=('system', 'star_class', 'distance'),
                                   selectmode='none', style='NavRoute.Treeview')
         self._tree.grid(column=0, row=1, sticky=tk.N+tk.E+tk.S+tk.W)
-        self._tree.tag_configure('entry', background=theme.ENTRY_BACKGROUND)
+        self._tree.tag_configure('entry', background=theme.COLOR_ENTRY_BACKGROUND)
         self._tree.heading('system', text="System", anchor=tk.W)
 
         column_width = font.measure('Star Class ')

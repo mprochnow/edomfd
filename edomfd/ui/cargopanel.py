@@ -27,7 +27,7 @@ class CargoPanel(ttk.Frame):
         self._tree = ttk.Treeview(self, show="headings", columns=('name', 'count'),
                                   selectmode='none', style='NavRoute.Treeview')
         self._tree.grid(column=0, row=1, sticky=tk.N+tk.E+tk.S+tk.W)
-        self._tree.tag_configure('entry', background=theme.ENTRY_BACKGROUND)
+        self._tree.tag_configure('entry', background=theme.COLOR_ENTRY_BACKGROUND)
         self._tree.heading('name', text="Name", anchor=tk.W)
 
         column_width = font.measure('0000 ')

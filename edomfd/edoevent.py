@@ -21,6 +21,26 @@ class EventType(enum.Enum):
     Cargo = enum.auto()
     Bounty = enum.auto()
     RedeemVoucher = enum.auto()
+    DockingGranted = enum.auto()
+    DockingDenied = enum.auto()
+    DockingTimeout = enum.auto()
+    Docked = enum.auto()
+
+
+class StationType(enum.Enum):
+    @staticmethod
+    def _generate_next_value_(name, start, count, last_values):
+        return name
+
+    Coriolis = enum.auto()
+    Orbis = enum.auto()
+    Ocellus = enum.auto()
+    AsteroidBase = enum.auto()
+    Outpost = enum.auto()
+    MegaShip = enum.auto()
+    FleetCarrier = enum.auto()
+    CraterOutpost = enum.auto()
+    OnFootSettlement = enum.auto()
 
 
 class Status:

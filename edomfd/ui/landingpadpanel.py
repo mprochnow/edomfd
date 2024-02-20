@@ -6,7 +6,7 @@ import math
 import tkinter as tk
 from tkinter import ttk
 
-from ui.theme import PANEL_BACKGROUND, TEXT_COLOR, ENTRY_BACKGROUND
+from ui.theme import COLOR_PANEL_BACKGROUND, COLOR_TEXT, COLOR_ENTRY_BACKGROUND, COLOR_TEXT2
 
 BLINK_INTERVAL = 500
 MARGIN = 20
@@ -21,7 +21,7 @@ class LandingPadPanel(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
-        self._canvas = tk.Canvas(self, bg=PANEL_BACKGROUND, bd=0, highlightthickness=0, relief='ridge')
+        self._canvas = tk.Canvas(self, bg=COLOR_PANEL_BACKGROUND, bd=0, highlightthickness=0, relief='ridge')
         self._canvas.grid(column=0, row=0, sticky=tk.N + tk.E + tk.S + tk.W)
 
         self._pads: list[int | None] = [None] * LANDING_PAD_COUNT
@@ -32,36 +32,42 @@ class LandingPadPanel(ttk.Frame):
         self._highlighted_pad: int | None = None
 
         self.bind('<Configure>', self._on_configure)
-        self.after(BLINK_INTERVAL, self._blink)
 
     def highlight_pad(self, pad: int | None) -> None:
+        if pad is None:
+            if self._highlighted_pad is not None:
+                self._canvas.itemconfig(self._pads[self._highlighted_pad - 1], fill=COLOR_ENTRY_BACKGROUND)
+        else:
+            self.after(BLINK_INTERVAL, self._blink)
+
         self._highlighted_pad = pad
 
     def _blink(self) -> None:
         if self._blink_on:
-            self._canvas.itemconfig(self._left_circle1, fill=TEXT_COLOR)
-            self._canvas.itemconfig(self._left_circle2, fill=TEXT_COLOR)
-
-            if self._highlighted_pad is not None:
-                self._canvas.itemconfig(self._pads[self._highlighted_pad - 1], fill=TEXT_COLOR)
+            circle_fill = COLOR_TEXT
+            pad_fill = COLOR_TEXT2
         else:
-            self._canvas.itemconfig(self._left_circle1, fill='')
-            self._canvas.itemconfig(self._left_circle2, fill='')
+            circle_fill = ''
+            pad_fill = COLOR_ENTRY_BACKGROUND
 
-            if self._highlighted_pad is not None:
-                self._canvas.itemconfig(self._pads[self._highlighted_pad - 1], fill=ENTRY_BACKGROUND)
+        self._canvas.itemconfig(self._left_circle1, fill=circle_fill)
+        self._canvas.itemconfig(self._left_circle2, fill=circle_fill)
+
+        if self._highlighted_pad is not None:
+            self._canvas.itemconfig(self._pads[self._highlighted_pad - 1], fill=pad_fill)
 
         self._blink_on = not self._blink_on
 
-        self.after(BLINK_INTERVAL, self._blink)
+        if self._highlighted_pad is not None:
+            self.after(BLINK_INTERVAL, self._blink)
 
     def _on_configure(self, event: tk.Event) -> None:
         self._canvas.delete('all')
         self._draw(event.width, event.height)
 
     def _draw(self, w: int, h: int) -> None:
-        outline = TEXT_COLOR
-        fill = ENTRY_BACKGROUND
+        outline = COLOR_TEXT
+        fill = COLOR_ENTRY_BACKGROUND
 
         r = min(w, h) // 2 - MARGIN
 
@@ -151,7 +157,7 @@ class LandingPadPanel(ttk.Frame):
         self._pads[44] = self._canvas.create_polygon(r6[1], r5[1], r5[0], r6[0], outline=outline, fill=fill)
 
     def _draw_circle(self, x: float, y: float, r: float) -> int:
-        return self._canvas.create_oval(x - r, y - r, x + r, y + r, outline=TEXT_COLOR, fill=TEXT_COLOR)
+        return self._canvas.create_oval(x - r, y - r, x + r, y + r, outline=COLOR_TEXT, fill=COLOR_TEXT)
 
     @staticmethod
     def _get_points(r: float, w: float, h: float) -> list[tuple[float, float]]:

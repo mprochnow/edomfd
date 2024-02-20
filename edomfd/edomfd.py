@@ -102,13 +102,16 @@ class Main:
                 )
             case EventType.Location | EventType.FSDJump:
                 self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
-                # TODO: Copy system name to clipboard?
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
                 self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
                 self._tk.after(0, self._window.nav_route_panel.set_route, state.route)
-
             case EventType.Cargo | EventType.Loadout:
                 self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity, state.cargo_list)
+            case EventType.DockingGranted:
+                if state.landing_pad is not None:
+                    self._tk.after(0, self._window.show_landing_pad_panel, True, state.landing_pad)
+            case EventType.Docked | event_type.DockingTimeout:
+                self._tk.after(0, self._window.show_landing_pad_panel, False)
 
 
 if __name__ == '__main__':

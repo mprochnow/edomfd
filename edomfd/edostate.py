@@ -22,7 +22,7 @@ from typing import Callable
 
 import edoevent
 import edojournal
-from edoevent import EventType
+from edoevent import EventType, StationType
 
 FILENAME_NAV_ROUTE = 'NavRoute.json'
 FILENAME_CARGO_LIST = 'Cargo.json'
@@ -64,6 +64,7 @@ class CurrentState:
         self._cargo_capacity: int = 0
         self._cargo_count: int = 0
         self._bounty: int = 0
+        self._landing_pad: int | None = None
 
         self._load_nav_route()
         self._load_newest_journal()
@@ -91,6 +92,10 @@ class CurrentState:
     @property
     def bounty(self) -> int:
         return self._bounty
+
+    @property
+    def landing_pad(self) -> int | None:
+        return self._landing_pad
 
     def consume_event(self, event: dict) -> None:
         try:
@@ -131,6 +136,17 @@ class CurrentState:
             case EventType.RedeemVoucher:
                 if event['Type'] == 'bounty':
                     self._bounty = 0
+            case EventType.DockingGranted:
+                landing_pad = event['LandingPad']
+                station_type = StationType(event['StationType'])
+
+                if station_type in (
+                     StationType.Coriolis, StationType.Orbis, StationType.Ocellus, StationType.AsteroidBase
+                ):
+                    if 1 <= landing_pad <= 45:
+                        self._landing_pad = landing_pad
+            case EventType.Docked | EventType.DockingTimeout:
+                self._landing_pad = None
 
     def _load_nav_route(self) -> None:
         self._route.clear()
@@ -146,9 +162,9 @@ class CurrentState:
                     distance: float = 0
                     if i > 0:
                         distance = math.sqrt(
-                            math.pow(route[i-1]['StarPos'][0] - route[i]['StarPos'][0], 2) +
-                            math.pow(route[i-1]['StarPos'][1] - route[i]['StarPos'][1], 2) +
-                            math.pow(route[i-1]['StarPos'][2] - route[i]['StarPos'][2], 2)
+                            math.pow(route[i - 1]['StarPos'][0] - route[i]['StarPos'][0], 2) +
+                            math.pow(route[i - 1]['StarPos'][1] - route[i]['StarPos'][1], 2) +
+                            math.pow(route[i - 1]['StarPos'][2] - route[i]['StarPos'][2], 2)
                         )
 
                     route_entry = RouteEntry(
@@ -161,7 +177,7 @@ class CurrentState:
 
                     self._route.append(route_entry)
 
-                self._remaining_jumps_in_route = len(self._route)-1
+                self._remaining_jumps_in_route = len(self._route) - 1
 
     def _load_cargo_list(self) -> None:
         self._cargo_list.clear()
