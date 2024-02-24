@@ -72,17 +72,17 @@ class LandingPadPanel(ttk.Frame):
         r = min(w, h) // 2 - MARGIN
 
         r1 = self._get_points(r, w, h)
-        r2 = self._get_points(r / 6 * 5, w, h)
-        r3 = self._get_points(r / 6 * 4, w, h)
-        r4 = self._get_points(r / 6 * 3, w, h)
-        r5 = self._get_points(r / 6 * 2, w, h)
-        r6 = self._get_points(r / 6, w, h)
+        r2 = self._get_points(r / 5 * 3.5, w, h)
+        r3 = self._get_points(r / 5 * 2.5, w, h)
+        r4 = self._get_points(r / 5 * 1.75, w, h)
+        r5 = self._get_points(r / 5 * 1.25, w, h)
+        r6 = self._get_points(r / 5 * 1, w, h)
 
-        self._left_circle1 = self._draw_circle(r1[8][0] - MARGIN / 2, r1[8][1] + MARGIN / 2, LIGHTS_DIA)
-        self._left_circle2 = self._draw_circle(r1[9][0] - MARGIN / 2, r1[9][1] - MARGIN / 2, LIGHTS_DIA)
+        self._left_circle1 = self._draw_circle(r1[8][0] - MARGIN / 2, h/2 + MARGIN / 2, LIGHTS_DIA)
+        self._left_circle2 = self._draw_circle(r1[9][0] - MARGIN / 2, h/2 - MARGIN / 2, LIGHTS_DIA)
 
-        self._draw_circle(r1[3][0] + MARGIN / 2, r1[3][1] + MARGIN / 2, LIGHTS_DIA)
-        self._draw_circle(r1[2][0] + MARGIN / 2, r1[2][1] - MARGIN / 2, LIGHTS_DIA)
+        self._draw_circle(r1[3][0] + MARGIN / 2, h/2 + MARGIN / 2, LIGHTS_DIA)
+        self._draw_circle(r1[2][0] + MARGIN / 2, h/2 - MARGIN / 2, LIGHTS_DIA)
 
         self._draw_landing_pads(r1, r2, r3, r4, r5, r6, outline, fill)
 
@@ -98,6 +98,7 @@ class LandingPadPanel(ttk.Frame):
             fill: str
     ) -> None:
         self._canvas.create_polygon(*r1, outline=outline, fill=fill)
+        self._canvas.create_polygon(*r6, outline=outline, fill=COLOR_PANEL_BACKGROUND)
 
         self._pads[0] = self._canvas.create_polygon(r2[0], r1[0], r1[11], r2[11], outline=outline, fill=fill)
         self._pads[1] = self._canvas.create_polygon(r3[0], r2[0], r2[11], r3[11], outline=outline, fill=fill)
