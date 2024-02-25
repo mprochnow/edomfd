@@ -28,7 +28,7 @@ class NavRoutePanel(ttk.Frame):
         self._frame.columnconfigure(0, weight=0)
         self._frame.columnconfigure(1, weight=0)
 
-        self._label_star_system = ttk.Label(self._frame, text="Current system: -")
+        self._label_star_system = ttk.Label(self._frame, text="-")
         self._label_star_system.configure(state='disabled')
         self._label_star_system.grid(column=0, row=0, sticky=tk.N+tk.S+tk.W)
 
@@ -44,8 +44,8 @@ class NavRoutePanel(ttk.Frame):
         self._tree.tag_configure('entry', background=theme.COLOR_ENTRY_BACKGROUND)
         self._tree.heading('system', text="System", anchor=tk.W)
 
-        column_width = font.measure('Star Class ')
-        self._tree.heading('star_class', text="Star Class", anchor=tk.W)
+        column_width = font.measure('Class ')
+        self._tree.heading('star_class', text="Class", anchor=tk.W)
         self._tree.column('star_class', minwidth=column_width, width=column_width, stretch=False)
 
         column_width = font.measure('Distance ')
@@ -54,7 +54,7 @@ class NavRoutePanel(ttk.Frame):
 
     def set_current_system(self, name: str) -> None:
         self._system_name = name
-        self._label_star_system.configure(text=f"Current system: {name}")
+        self._label_star_system.configure(text=f"{name}")
 
     def set_route(self, nav_route: list[edostate.RouteEntry]) -> None:
         self._tree.delete(*self._tree.get_children())
