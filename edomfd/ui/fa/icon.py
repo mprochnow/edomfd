@@ -28,12 +28,12 @@ FONTS = {
 
 class Icon:
     def __init__(self) -> None:
-        self._font_cache: dict[(Style, int), FreeTypeFont] = {}
+        self._font_cache: dict[tuple[Style, int], FreeTypeFont] = {}
 
-    def get_icon(self, name: str, style: Style, font_size: int, fg="black", bg=(0, 0, 0, 0)) -> Image:
+    def get_icon(self, name: str, style: Style, font_size: int, fg="black", bg=(0, 0, 0, 0)) -> Image.Image:
         icon_meta = meta.get(name)
         assert icon_meta is not None, f"Icon with name '{name}' not found"
-        assert style in icon_meta['styles'], f"Icon 'name' with style 'style' not found"
+        assert style in icon_meta['styles'], f"Icon '{name}' with style '{style}' not found"
 
         icon_font: FreeTypeFont = self._get_font(style, font_size)
         icon_symbol: str = icon_meta['unicode']
