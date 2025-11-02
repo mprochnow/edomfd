@@ -3,15 +3,11 @@
 # See LICENSE.MD
 
 import tkinter as tk
-from tkinter import ttk
 
 import screeninfo
 
 from ui import theme
-from ui.cargopanel import CargoPanel
-from ui.landingpadpanel import LandingPadPanel
-from ui.navroutepanel import NavRoutePanel
-from ui.statuspanel import StatusPanel
+from ui.shippanel import ShipPanel
 
 
 class AppWindow:
@@ -31,24 +27,8 @@ class AppWindow:
 
         self._root.bind('<3>', lambda e: self._context_menu.post(e.x_root, e.y_root))
 
-        self._frame = ttk.Frame(self._root)
-        self._frame.columnconfigure(0, weight=1, uniform="fubar")
-        self._frame.columnconfigure(1, weight=1, uniform="fubar")
-
-        self._frame.rowconfigure(0, weight=1)
-        self._frame.rowconfigure(1, weight=0)
-        self._frame.grid(column=0, row=0, sticky=tk.N+tk.E+tk.S+tk.W)
-
-        self.landing_pad_panel: LandingPadPanel = LandingPadPanel(self._frame)
-
-        self.nav_route_panel: NavRoutePanel = NavRoutePanel(self._frame)
-        self.nav_route_panel.grid(column=0, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
-
-        self.cargo_panel: CargoPanel = CargoPanel(self._frame)
-        self.cargo_panel.grid(column=1, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
-
-        self.status_panel: StatusPanel = StatusPanel(self._frame)
-        self.status_panel.grid(column=0, row=1, pady=0, columnspan=2, sticky=tk.N+tk.E+tk.S+tk.W)
+        self.ship_panel = ShipPanel(self._root)
+        self.ship_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
 
         self._root.bind('<Escape>', self._close)
         self._root.bind('<F11>', self._toggle_fullscreen)
@@ -61,17 +41,6 @@ class AppWindow:
     def destroy(self, _=None):
         self._root.destroy()
 
-    def show_landing_pad_panel(self, show: bool, landing_pad: int | None = None) -> None:
-        if show:
-            self.landing_pad_panel.highlight_pad(landing_pad)
-            self.landing_pad_panel.grid(column=0, row=0, columnspan=2, sticky=tk.N + tk.E + tk.S + tk.W)
-            self.nav_route_panel.grid_forget()
-            self.cargo_panel.grid_forget()
-        else:
-            self.landing_pad_panel.highlight_pad(None)
-            self.landing_pad_panel.grid_forget()
-            self.nav_route_panel.grid(column=0, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
-            self.cargo_panel.grid(column=1, row=0, padx=1, sticky=tk.N+tk.E+tk.S+tk.W)
 
     def _maybe_move_to_secondary_monitor(self):
         for monitor in self._monitors:

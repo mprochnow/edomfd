@@ -77,9 +77,9 @@ class Main:
     def __call__(self) -> None:
         self._journal.start()
 
-        self._tk.after(0, self._window.nav_route_panel.set_current_system, self._current_state.star_system[0])
-        self._tk.after(0, self._window.nav_route_panel.set_route, self._current_state.route)
-        self._tk.after(0, self._window.cargo_panel.set, *self._current_state.cargo_capacity,
+        self._tk.after(0, self._window.ship_panel.set_current_system, self._current_state.star_system[0])
+        self._tk.after(0, self._window.ship_panel.set_route, self._current_state.route)
+        self._tk.after(0, self._window.ship_panel.set_cargo, *self._current_state.cargo_capacity,
                        self._current_state.cargo_list)
 
         try:
@@ -94,24 +94,27 @@ class Main:
     def _event_cb(self, state: edostate.CurrentState, event_type: EventType) -> None:
         match event_type:
             case EventType.Status:
-                s: edoevent.Status = state.status
-
-                self._tk.after(
-                    0, self._window.status_panel.set, s.fsd_mass_locked, s.cargo_scoop_deployed, s.landing_gear,
-                    s.hardpoints_deployed, s.lights_on, s.night_vision
-                )
+                self._handle_status(state)
             case EventType.Location | EventType.FSDJump:
-                self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
+                self._tk.after(0, self._window.ship_panel.set_current_system, state.star_system[0])
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
-                self._tk.after(0, self._window.nav_route_panel.set_current_system, state.star_system[0])
-                self._tk.after(0, self._window.nav_route_panel.set_route, state.route)
+                self._tk.after(0, self._window.ship_panel.set_current_system, state.star_system[0])
+                self._tk.after(0, self._window.ship_panel.set_route, state.route)
             case EventType.Cargo | EventType.Loadout:
-                self._tk.after(0, self._window.cargo_panel.set, *state.cargo_capacity, state.cargo_list)
+                self._tk.after(0, self._window.ship_panel.set_cargo, *state.cargo_capacity, state.cargo_list)
             case EventType.DockingGranted:
                 if state.landing_pad is not None:
-                    self._tk.after(0, self._window.show_landing_pad_panel, True, state.landing_pad)
+                    self._tk.after(0, self._window.ship_panel.show_landing_pad_panel, True, state.landing_pad)
             case EventType.Docked | event_type.DockingTimeout:
-                self._tk.after(0, self._window.show_landing_pad_panel, False)
+                self._tk.after(0, self._window.ship_panel.show_landing_pad_panel, False)
+
+    def _handle_status(self, state: edostate.CurrentState) -> None:
+        status: edoevent.Status = state.status
+
+        self._tk.after(
+            0, self._window.ship_panel.set_status, status.fsd_mass_locked, status.cargo_scoop_deployed,
+            status.landing_gear, status.hardpoints_deployed, status.lights_on, status.night_vision
+        )
 
 
 if __name__ == '__main__':
