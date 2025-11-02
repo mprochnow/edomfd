@@ -18,8 +18,6 @@ class ShipPanel(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=0)
 
-        self.grid(column=0, row=0, sticky=tk.N+tk.S+tk.E+tk.W)
-
         self._landing_pad_panel: LandingPadPanel = LandingPadPanel(self)
 
         self._nav_route_panel: NavRoutePanel = NavRoutePanel(self)

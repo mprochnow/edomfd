@@ -65,6 +65,8 @@ class WindowsFileLock:
 
 class Main:
     def __init__(self, journal_dir: str) -> None:
+        self._on_foot: bool | None = None
+
         # Needs to be called before Tk is initialized because it might mess with DPI awareness
         monitors = list(screeninfo.get_monitors())
 
@@ -72,7 +74,6 @@ class Main:
         self._window = AppWindow(monitors, self._tk)
 
         self._current_state = edostate.CurrentState(journal_dir, self._event_cb)
-
         self._journal = Journal(self._current_state.consume_event)
 
     def __call__(self) -> None:
@@ -112,10 +113,30 @@ class Main:
     def _handle_status(self, state: edostate.CurrentState) -> None:
         status: edoevent.Status = state.status
 
-        self._tk.after(
-            0, self._window.ship_panel.set_status, status.fsd_mass_locked, status.cargo_scoop_deployed,
-            status.landing_gear, status.hardpoints_deployed, status.lights_on, status.night_vision
-        )
+        if self._on_foot is None:
+            if status.on_foot:
+                self._window.show_on_foot_panel()
+            else:
+                self._window.show_ship_panel()
+        else:
+            if not self._on_foot and status.on_foot:
+                self._window.show_on_foot_panel()
+            elif self._on_foot and not status.on_foot:
+                self._window.show_ship_panel()
+
+        self._on_foot = status.on_foot
+
+        if self._on_foot:
+            self._tk.after(
+                0, self._window.on_foot_panel.set, status.on_foot_in_station, status.on_foot_in_hangar,
+                status.on_foot_social_space, status.on_foot_exterior, status.on_foot_on_planet,
+                (status.latitude, status.longitude), status.heading
+            )
+        else:
+            self._tk.after(
+                0, self._window.ship_panel.set_status, status.fsd_mass_locked, status.cargo_scoop_deployed,
+                status.landing_gear, status.hardpoints_deployed, status.lights_on, status.night_vision
+            )
 
 
 if __name__ == '__main__':

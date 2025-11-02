@@ -3,10 +3,12 @@
 # See LICENSE.MD
 
 import tkinter as tk
+from tkinter import ttk
 
 import screeninfo
 
 from ui import theme
+from ui.onfootpanel import OnFootPanel
 from ui.shippanel import ShipPanel
 
 
@@ -26,12 +28,16 @@ class AppWindow:
         self._context_menu.add_command(label="Quit", command=self.destroy)
 
         self._root.bind('<3>', lambda e: self._context_menu.post(e.x_root, e.y_root))
-
-        self.ship_panel = ShipPanel(self._root)
-        self.ship_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
-
         self._root.bind('<Escape>', self._close)
         self._root.bind('<F11>', self._toggle_fullscreen)
+
+        self._frame = ttk.Frame(self._root)
+        self._frame.columnconfigure(0, weight=1)
+        self._frame.rowconfigure(0, weight=1)
+        self._frame.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+
+        self.ship_panel = ShipPanel(self._frame)
+        self.on_foot_panel = OnFootPanel(self._frame)
 
         self._maybe_move_to_secondary_monitor()
 
@@ -65,3 +71,11 @@ class AppWindow:
             self._root.state('normal')
             self._root.geometry(self._geometry)
             self._root.overrideredirect(False)
+
+    def show_ship_panel(self) -> None:
+        self.ship_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self.on_foot_panel.grid_forget()
+
+    def show_on_foot_panel(self) -> None:
+        self.ship_panel.grid_forget()
+        self.on_foot_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
