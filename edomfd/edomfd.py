@@ -35,6 +35,7 @@ log = logging.getLogger(__name__)
 
 
 class WindowsFileLock:
+    """Context manager that locks a file-like object under Microsoft Windows."""
     class Locked(Exception):
         pass
 

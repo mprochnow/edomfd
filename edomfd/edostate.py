@@ -51,6 +51,7 @@ class CargoListEntry:
 
 
 class CurrentState:
+    """Holds the current state of Elite Dangerous: Odyssey based on the journal file and the status.json"""
     def __init__(self, journal_dir: str, event_cb: Callable) -> None:
         self._journal_dir: str = journal_dir
         self._event_cb: Callable = event_cb
@@ -98,6 +99,7 @@ class CurrentState:
         return self._landing_pad
 
     def consume_event(self, event: dict) -> None:
+        """Called when new entries are added to the journal file or the status.json file has changed."""
         try:
             event_type: EventType = EventType(event['event'])
         except ValueError as e:

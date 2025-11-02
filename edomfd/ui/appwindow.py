@@ -35,24 +35,23 @@ class AppWindow:
 
         self._maybe_move_to_secondary_monitor()
 
-    def show(self):
+    def show(self) -> None:
         self._root.mainloop()
 
-    def destroy(self, _=None):
+    def destroy(self, _=None) -> None:
         self._root.destroy()
 
-
-    def _maybe_move_to_secondary_monitor(self):
+    def _maybe_move_to_secondary_monitor(self) -> None:
         for monitor in self._monitors:
             if not monitor.is_primary:
                 self._root.geometry(f"+{monitor.x:+}{monitor.y:+}")
                 self._toggle_fullscreen()
                 break
 
-    def _close(self, _=None):
+    def _close(self, _=None) -> None:
         self._root.quit()
 
-    def _toggle_fullscreen(self, _=None):
+    def _toggle_fullscreen(self, _=None) -> None:
         self._fullscreen = not self._fullscreen
 
         if self._fullscreen:
