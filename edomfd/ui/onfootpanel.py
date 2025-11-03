@@ -44,23 +44,13 @@ class OnFootPanel(ttk.Frame):
         self._label_heading = ttk.Label(self, text="-")
         self._label_heading.grid(row=6, column=1, sticky=tk.W + tk.E)
 
-    def set(self, in_station: bool, in_hangar: bool, in_social_space: bool, exterior: bool, on_planet: bool,
-            geo_coords: tuple[float | None, float | None], heading: float | None) -> None:
+
+    def set_status(self, in_station: bool, in_hangar: bool, in_social_space: bool, exterior: bool, on_planet: bool,
+                   geo_coords: tuple[float | None, float | None], heading: float | None) -> None:
         self._label_in_station.configure(text=f"{int(in_station)}")
         self._label_in_hangar.configure(text=f"{int(in_hangar)}")
         self._label_in_social_space.configure(text=f"{int(in_social_space)}")
         self._label_exterior.configure(text=f"{int(exterior)}")
         self._label_on_planet.configure(text=f"{int(on_planet)}")
-
-        if geo_coords[0] is not None:
-            text = f"{geo_coords[0]:.6f}, {geo_coords[1]:.6f}"
-        else:
-            text = "-"
-        self._label_geo_coords.configure(text=text)
-
-        if heading is not None:
-            text = f"{heading:.6f}"
-        else:
-            text = "-"
-
-        self._label_heading.configure(text=text)
+        self._label_geo_coords.configure(text=f"{geo_coords[0]:.6f}, {geo_coords[1]:.6f}" if geo_coords[0] else "-")
+        self._label_heading.configure(text=f"{heading:.6f}" if heading else "-")

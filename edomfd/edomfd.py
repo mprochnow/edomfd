@@ -113,22 +113,18 @@ class Main:
     def _handle_status(self, state: edostate.CurrentState) -> None:
         status: edoevent.Status = state.status
 
-        if self._on_foot is None:
-            if status.on_foot:
+        if status.on_foot:
+            if self._on_foot is None or self._on_foot is False:
                 self._window.show_on_foot_panel()
-            else:
-                self._window.show_ship_panel()
         else:
-            if not self._on_foot and status.on_foot:
-                self._window.show_on_foot_panel()
-            elif self._on_foot and not status.on_foot:
+            if self._on_foot is None or self._on_foot is True:
                 self._window.show_ship_panel()
 
         self._on_foot = status.on_foot
 
         if self._on_foot:
             self._tk.after(
-                0, self._window.on_foot_panel.set, status.on_foot_in_station, status.on_foot_in_hangar,
+                0, self._window.on_foot_panel.set_status, status.on_foot_in_station, status.on_foot_in_hangar,
                 status.on_foot_social_space, status.on_foot_exterior, status.on_foot_on_planet,
                 (status.latitude, status.longitude), status.heading
             )
