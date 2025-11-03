@@ -42,6 +42,7 @@ class StationType(enum.Enum):
     CraterOutpost = enum.auto()
     OnFootSettlement = enum.auto()
     SpaceConstructionDepot = enum.auto()
+    CraterPort = enum.auto()
 
 
 class Status:
