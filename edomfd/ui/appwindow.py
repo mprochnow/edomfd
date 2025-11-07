@@ -7,6 +7,8 @@ from tkinter import ttk
 
 import screeninfo
 
+import edoevent
+import edostate
 from ui import theme
 from ui.onfootpanel import OnFootPanel
 from ui.shippanel import ShipPanel
@@ -36,8 +38,10 @@ class AppWindow:
         self._frame.rowconfigure(0, weight=1)
         self._frame.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
 
-        self.ship_panel = ShipPanel(self._frame)
-        self.on_foot_panel = OnFootPanel(self._frame)
+        self._ship_panel: ShipPanel = ShipPanel(self._frame)
+        self._ship_panel_visible: bool = False
+        self._on_foot_panel: OnFootPanel = OnFootPanel(self._frame)
+        self._on_foot_panel_visible: bool = False
 
         self._maybe_move_to_secondary_monitor()
 
@@ -72,10 +76,34 @@ class AppWindow:
             self._root.geometry(self._geometry)
             self._root.overrideredirect(False)
 
+    def set_current_system(self, system_name: str) -> None:
+        self._ship_panel.set_current_system(system_name)
+
+    def set_route(self, nav_route: list[edostate.RouteEntry]) -> None:
+        self._ship_panel.set_route(nav_route)
+
+    def set_cargo(self, cargo_used: int, cargo_capacity: int, cargo_list: list[edostate.CargoListEntry]) -> None:
+        self._ship_panel.set_cargo(cargo_used, cargo_capacity, cargo_list)
+
+    def show_landing_pad(self, show: bool, landing_pad: int | None) -> None:
+        self._ship_panel.show_landing_pad_panel(show, landing_pad)
+
     def show_ship_panel(self) -> None:
-        self.ship_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
-        self.on_foot_panel.grid_forget()
+        self._ship_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self._ship_panel_visible = True
+
+        self._on_foot_panel.grid_forget()
+        self._on_foot_panel_visible = False
 
     def show_on_foot_panel(self) -> None:
-        self.ship_panel.grid_forget()
-        self.on_foot_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self._ship_panel.grid_forget()
+        self._ship_panel_visible = False
+
+        self._on_foot_panel.grid(row=0, column=0, sticky=tk.N + tk.E + tk.S + tk.W)
+        self._on_foot_panel_visible = True
+
+    def set_status(self, status: edoevent.Status) -> None:
+        if self._on_foot_panel_visible:
+            self._on_foot_panel.set_status(status)
+        else:
+            self._ship_panel.set_status(status)

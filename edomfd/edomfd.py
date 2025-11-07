@@ -35,7 +35,10 @@ log = logging.getLogger(__name__)
 
 
 class WindowsFileLock:
-    """Context manager that locks a file-like object under Microsoft Windows."""
+    """
+    Context manager that creates and locks a file-like object under Microsoft Windows. The created file will be deleted
+    after the context was exited.
+    """
     class Locked(Exception):
         pass
 
@@ -71,7 +74,7 @@ class Main:
         monitors = list(screeninfo.get_monitors())
 
         self._tk = tk.Tk()
-        self._window = AppWindow(monitors, self._tk)
+        self._window: AppWindow = AppWindow(monitors, self._tk)
 
         self._current_state = edostate.CurrentState(journal_dir, self._event_cb)
         self._journal = Journal(self._current_state.consume_event)
@@ -79,9 +82,9 @@ class Main:
     def __call__(self) -> None:
         self._journal.start()
 
-        self._tk.after(0, self._window.ship_panel.set_current_system, self._current_state.star_system[0])
-        self._tk.after(0, self._window.ship_panel.set_route, self._current_state.route)
-        self._tk.after(0, self._window.ship_panel.set_cargo, *self._current_state.cargo_capacity,
+        self._tk.after(0, self._window.set_current_system, self._current_state.star_system[0])
+        self._tk.after(0, self._window.set_route, self._current_state.route)
+        self._tk.after(0, self._window.set_cargo, *self._current_state.cargo_capacity,
                        self._current_state.cargo_list)
 
         try:
@@ -98,17 +101,17 @@ class Main:
             case EventType.Status:
                 self._handle_status(state)
             case EventType.Location | EventType.FSDJump:
-                self._tk.after(0, self._window.ship_panel.set_current_system, state.star_system[0])
+                self._tk.after(0, self._window.set_current_system, state.star_system[0])
             case EventType.NavRoute | EventType.FSDTarget | EventType.NavRouteClear:
-                self._tk.after(0, self._window.ship_panel.set_current_system, state.star_system[0])
-                self._tk.after(0, self._window.ship_panel.set_route, state.route)
+                self._tk.after(0, self._window.set_current_system, state.star_system[0])
+                self._tk.after(0, self._window.set_route, state.route)
             case EventType.Cargo | EventType.Loadout:
-                self._tk.after(0, self._window.ship_panel.set_cargo, *state.cargo_capacity, state.cargo_list)
+                self._tk.after(0, self._window.set_cargo, *state.cargo_capacity, state.cargo_list)
             case EventType.DockingGranted:
                 if state.landing_pad is not None:
-                    self._tk.after(0, self._window.ship_panel.show_landing_pad_panel, True, state.landing_pad)
+                    self._tk.after(0, self._window.show_landing_pad, True, state.landing_pad)
             case EventType.Docked | event_type.DockingTimeout:
-                self._tk.after(0, self._window.ship_panel.show_landing_pad_panel, False)
+                self._tk.after(0, self._window.show_landing_pad, False, None)
 
     def _handle_status(self, state: edostate.CurrentState) -> None:
         status: edoevent.Status = state.status
@@ -122,17 +125,7 @@ class Main:
 
         self._on_foot = status.on_foot
 
-        if self._on_foot:
-            self._tk.after(
-                0, self._window.on_foot_panel.set_status, status.on_foot_in_station, status.on_foot_in_hangar,
-                status.on_foot_social_space, status.on_foot_exterior, status.on_foot_on_planet,
-                (status.latitude, status.longitude), status.heading
-            )
-        else:
-            self._tk.after(
-                0, self._window.ship_panel.set_status, status.fsd_mass_locked, status.cargo_scoop_deployed,
-                status.landing_gear, status.hardpoints_deployed, status.lights_on, status.night_vision
-            )
+        self._tk.after(0, self._window.set_status, status)
 
 
 if __name__ == '__main__':

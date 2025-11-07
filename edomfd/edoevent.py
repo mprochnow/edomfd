@@ -47,12 +47,12 @@ class StationType(enum.Enum):
 
 class Status:
     def __init__(self, j):
-        self.latitude = j.get('Latitude')
-        self.longitude = j.get('Longitude')
-        self.heading = j.get('Heading')
-        self.altitude = j.get('Altitude')
-        self.oxygen = j.get('Oxygen')
-        self.gravity = j.get('Gravity')
+        self.latitude: float | None = j.get('Latitude')
+        self.longitude: float | None = j.get('Longitude')
+        self.heading: float | None = j.get('Heading')
+        self.altitude: float | None = j.get('Altitude')
+        self.oxygen: float | None = j.get('Oxygen')
+        self.gravity: float | None = j.get('Gravity')
 
         flags = j.get('Flags', 0)
         flags2 = j.get('Flags2', 0)

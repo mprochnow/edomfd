@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+import edoevent
 import edostate
 from ui.cargopanel import CargoPanel
 from ui.landingpadpanel import LandingPadPanel
@@ -29,11 +30,17 @@ class ShipPanel(ttk.Frame):
         self._status_panel: StatusPanel = StatusPanel(self)
         self._status_panel.grid(column=0, row=1, pady=0, columnspan=2, sticky=tk.N + tk.E + tk.S + tk.W)
 
-    def set_status(self, mass_locked: bool, cargo_scoop_deployed: bool, landing_gear: bool, hardpoints: bool,
-            lights: bool, night_vision: bool) -> None:
-        self._status_panel.set(mass_locked, cargo_scoop_deployed, landing_gear, hardpoints, lights, night_vision)
+    def set_status(self, status: edoevent.Status) -> None:
+        self._status_panel.set(
+            status.fsd_mass_locked,
+            status.cargo_scoop_deployed,
+            status.landing_gear,
+            status.hardpoints_deployed,
+            status.lights_on,
+            status.night_vision
+        )
 
-    def show_landing_pad_panel(self, show: bool, landing_pad: int | None = None) -> None:
+    def show_landing_pad_panel(self, show: bool, landing_pad: int | None) -> None:
         if show:
             self._landing_pad_panel.highlight_pad(landing_pad)
             self._landing_pad_panel.grid(column=0, row=0, columnspan=2, sticky=tk.N + tk.E + tk.S + tk.W)

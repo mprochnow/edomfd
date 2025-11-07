@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 
+import edoevent
+
 
 class OnFootPanel(ttk.Frame):
     def __init__(self, parent):
@@ -45,12 +47,19 @@ class OnFootPanel(ttk.Frame):
         self._label_heading.grid(row=6, column=1, sticky=tk.W + tk.E)
 
 
-    def set_status(self, in_station: bool, in_hangar: bool, in_social_space: bool, exterior: bool, on_planet: bool,
-                   geo_coords: tuple[float | None, float | None], heading: float | None) -> None:
-        self._label_in_station.configure(text=f"{int(in_station)}")
-        self._label_in_hangar.configure(text=f"{int(in_hangar)}")
-        self._label_in_social_space.configure(text=f"{int(in_social_space)}")
-        self._label_exterior.configure(text=f"{int(exterior)}")
-        self._label_on_planet.configure(text=f"{int(on_planet)}")
-        self._label_geo_coords.configure(text=f"{geo_coords[0]:.6f}, {geo_coords[1]:.6f}" if geo_coords[0] else "-")
-        self._label_heading.configure(text=f"{heading:.6f}" if heading else "-")
+    def set_status(self, status: edoevent.Status) -> None:
+        self._label_in_station.configure(text=f"{int(status.on_foot_in_station)}")
+        self._label_in_hangar.configure(text=f"{int(status.on_foot_in_hangar)}")
+        self._label_in_social_space.configure(text=f"{int(status.on_foot_social_space)}")
+        self._label_exterior.configure(text=f"{int(status.on_foot_exterior)}")
+        self._label_on_planet.configure(text=f"{int(status.on_foot_on_planet)}")
+        if status.latitude is not None:
+            self._label_geo_coords.configure(text=f"{status.latitude:.6f}, {status.longitude:.6f}")
+
+            self._path.append((status.latitude, status.longitude))
+        else:
+            self._label_geo_coords.configure(text="-")
+        if status.heading is not None:
+            self._label_heading.configure(text=f"{status.heading:.6f}")
+        else:
+            self._label_heading.configure(text="-")
