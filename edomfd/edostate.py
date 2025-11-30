@@ -143,7 +143,8 @@ class CurrentState:
                 station_type = StationType(event['StationType'])
 
                 if station_type in (
-                     StationType.Coriolis, StationType.Orbis, StationType.Ocellus, StationType.AsteroidBase
+                        StationType.Coriolis, StationType.Orbis, StationType.Ocellus, StationType.AsteroidBase,
+                        StationType.Dodec
                 ):
                     if 1 <= landing_pad <= 45:
                         self._landing_pad = landing_pad
